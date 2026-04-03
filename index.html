@@ -9,17 +9,16 @@
     
     <style>
         :root {
-            /* Novas Cores - Fundo Branco */
-            --bg-color: #FFFFFF; /* Fundo Totalmente Branco */
-            --card-bg: #F9FAFB; /* Cinza Muito Claro para cartões e inputs */
-            --primary: #F5A623; /* Mantive o Dourado para destaques e botões */
+            --bg-color: #FFFFFF; 
+            --card-bg: #F9FAFB; 
+            --primary: #F5A623; 
             --primary-hover: #E59415;
-            --text-dark: #1F2937; /* Texto Escuro para contraste no branco */
-            --text-light: #6B7280; /* Texto Cinza Médio para detalhes */
-            --border: #E5E7EB; /* Borda Clara e sutil */
-            --success: #10B981; /* Verde Concluído (ajustado para fundo claro) */
-            --delete: #EF4444; /* Vermelho Remover (ajustado para fundo claro) */
-            --edit: #3B82F6; /* Azul Editar (ajustado para fundo claro) */
+            --text-dark: #1F2937; 
+            --text-light: #6B7280; 
+            --border: #E5E7EB; 
+            --success: #10B981; 
+            --delete: #EF4444; 
+            --edit: #3B82F6; 
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -38,7 +37,6 @@
             width: 100%;
             max-width: 500px;
             border-radius: 24px;
-            /* Sombra suave e clara */
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
             display: flex;
             flex-direction: column;
@@ -102,11 +100,8 @@
             padding: 16px; border-radius: 12px; font-size: 14px; font-weight: 800;
             cursor: pointer; text-transform: uppercase; transition: 0.3s;
         }
-        .btn-adicionar:hover { background: var(--primary-hover); }
 
-        .btn-adicionar.modo-edicao {
-            background: var(--edit);
-        }
+        .btn-adicionar.modo-edicao { background: var(--edit); }
 
         .lista-compras { list-style: none; padding: 10px 20px; min-height: 100px; background: #FFFFFF;}
 
@@ -122,12 +117,14 @@
             padding-left: 10px;
         }
 
-        .item-info { display: flex; align-items: center; gap: 12px; flex: 1; cursor: pointer; }
+        .item-info { display: flex; align-items: center; gap: 12px; flex: 1; cursor: pointer; min-width: 0; }
 
         .checkbox-custom {
-            width: 26px; height: 26px; border: 2px solid var(--border);
-            border-radius: 8px; display: flex; justify-content: center; align-items: center;
+            width: 26px; height: 26px; min-width: 26px; /* TRAVA PARA NÃO AMASSAR */
+            border: 2px solid var(--border); border-radius: 8px; 
+            display: flex; justify-content: center; align-items: center;
             color: transparent; background: var(--card-bg); transition: 0.2s;
+            flex-shrink: 0; 
         }
 
         .item-compra.comprado .checkbox-custom { background: var(--success); border-color: var(--success); color: #FFFFFF; }
@@ -139,14 +136,15 @@
             text-decoration: line-through; color: var(--text-light);
         }
 
-        .item-textos { display: flex; flex-direction: column; }
-        .nome { font-size: 16px; font-weight: 600; color: var(--text-dark); }
+        .item-textos { display: flex; flex-direction: column; min-width: 0; }
+        .nome { font-size: 16px; font-weight: 600; color: var(--text-dark); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .detalhes { font-size: 12px; color: var(--text-light); margin-top: 4px; }
 
-        .subtotal-val { font-size: 15px; font-weight: 700; color: var(--text-dark); margin-right: 5px; }
+        .acoes-container { display: flex; align-items: center; flex-shrink: 0; } /* TRAVA BOTOES */
+        .subtotal-val { font-size: 15px; font-weight: 700; color: var(--text-dark); margin-right: 5px; white-space: nowrap; }
 
         .btn-acao-item {
-            background: none; border: none; font-size: 18px; padding: 8px; cursor: pointer; transition: 0.2s; opacity: 0.7;
+            background: none; border: none; font-size: 18px; padding: 8px; cursor: pointer; transition: 0.2s; opacity: 0.7; flex-shrink: 0;
         }
         .btn-edit { color: var(--edit); }
         .btn-del { color: var(--text-light); }
@@ -159,9 +157,8 @@
             padding: 15px; border-radius: 12px; font-weight: 800;
             font-size: 15px; cursor: pointer; text-transform: uppercase; transition: 0.3s;
         }
-        .btn-salvar:hover { opacity: 0.9; }
 
-        /* Estilo Histórico - Fundo Claro */
+        /* Estilo Histórico */
         .historico-section { padding: 20px; background: var(--card-bg); border-top: 4px solid var(--primary); }
         .historico-titulo { font-size: 14px; font-weight: 800; color: var(--primary); text-transform: uppercase; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
         .card-historico { background: #FFFFFF; border: 1px solid var(--border); border-radius: 15px; padding: 15px; margin-bottom: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
@@ -171,7 +168,7 @@
         .hist-acoes { display: flex; gap: 10px; border-top: 1px solid var(--border); padding-top: 10px; }
         .btn-hist { flex: 1; padding: 8px; border-radius: 8px; border: none; font-size: 12px; font-weight: 700; cursor: pointer; transition: 0.2s; }
         .btn-view { background: var(--card-bg); color: var(--text-dark); border: 1px solid var(--border); }
-        .btn-view:hover { background: #EEEEEE; }
+        .btn-del-hist { background: rgba(239, 68, 68, 0.05); color: var(--delete); border: 1px solid rgba(239, 68, 68, 0.1); }
 
         #modal-itens { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; padding: 20px; justify-content: center; align-items: center; backdrop-filter: blur(2px); }
         .modal-content { background: #FFFFFF; width: 100%; max-width: 400px; border-radius: 20px; padding: 25px; border: 1px solid var(--border); max-height: 80vh; overflow-y: auto; box-shadow: 0 20px 50px rgba(0,0,0,0.1); }
@@ -232,9 +229,9 @@
     </div>
 
     <script>
-        // Mantive a lógica original exata, apenas atualizando os nomes das chaves do localStorage para esta versão
-        let compras = JSON.parse(localStorage.getItem('comprasPachecoWhite')) || [];
-        let historico = JSON.parse(localStorage.getItem('historicoPachecoWhite')) || [];
+        // Mudei a chave do localStorage para garantir que dados bugados antigos não atrapalhem o teste
+        let compras = JSON.parse(localStorage.getItem('comprasPachecoWhiteFix')) || [];
+        let historico = JSON.parse(localStorage.getItem('historicoPachecoWhiteFix')) || [];
         let indexSendoEditado = -1;
 
         function formatarMoeda(v) { return v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }); }
@@ -264,7 +261,7 @@
                             <span class="detalhes">${it.qtd}x • ${infoPeso}${formatarMoeda(v)}</span>
                         </div>
                     </div>
-                    <div style="display:flex; align-items:center;">
+                    <div class="acoes-container">
                         <span class="subtotal-val">${formatarMoeda(sub)}</span>
                         <button class="btn-acao-item btn-edit" onclick="iniciarEdicao(${i})"><i class="fas fa-pencil-alt"></i></button>
                         <button class="btn-acao-item btn-del" onclick="removerItem(${i})"><i class="fas fa-trash-alt"></i></button>
@@ -281,8 +278,11 @@
             const item = compras[index];
             document.getElementById('nome-item').value = item.nome;
             document.getElementById('qtd-item').value = item.qtd;
-            document.getElementById('peso-item').value = item.peso;
-            document.getElementById('preco-item').value = item.preco;
+            
+            // Se o valor era 0 ou vazio, deixa o campo limpo pra facilitar a digitação
+            document.getElementById('peso-item').value = item.peso > 0 ? item.peso : '';
+            document.getElementById('preco-item').value = item.preco > 0 ? item.preco : '';
+            
             const btn = document.getElementById('btn-add-main');
             btn.innerText = "Atualizar Item";
             btn.classList.add('modo-edicao');
@@ -295,7 +295,9 @@
             const q = document.getElementById('qtd-item');
             const p = document.getElementById('peso-item'); 
             const v = document.getElementById('preco-item');
+            
             if (!n.value.trim()) return alert("Digite o nome do produto!");
+            
             const dadosItem = { 
                 nome: n.value.trim(), 
                 qtd: q.value || 1, 
@@ -303,6 +305,7 @@
                 preco: v.value.replace(',', '.') || 0, 
                 comprado: indexSendoEditado !== -1 ? compras[indexSendoEditado].comprado : false 
             };
+            
             if (indexSendoEditado !== -1) {
                 compras[indexSendoEditado] = dadosItem;
                 indexSendoEditado = -1;
@@ -312,6 +315,7 @@
             } else {
                 compras.unshift(dadosItem);
             }
+            
             n.value = ''; q.value = ''; p.value = ''; v.value = '';
             salvarDados();
         }
@@ -319,9 +323,15 @@
         function importarDoRascunho() {
             const texto = document.getElementById('rascunho-texto').value.trim();
             if (!texto) return;
-            texto.split('\n').forEach(nome => {
-                if (nome.trim()) compras.push({ nome: nome.trim(), qtd: 1, peso: "", preco: 0, comprado: false });
+            
+            // Filtra as linhas vazias
+            const itensNovos = texto.split('\n').filter(n => n.trim() !== '');
+            
+            // Reverse para o unshift manter a mesma ordem que a pessoa digitou lá em cima
+            itensNovos.reverse().forEach(nome => {
+                compras.unshift({ nome: nome.trim(), qtd: 1, peso: "", preco: 0, comprado: false });
             });
+            
             document.getElementById('rascunho-texto').value = '';
             salvarDados();
         }
@@ -338,7 +348,7 @@
             });
             compras = [];
             document.getElementById('nome-lista-atual').value = '';
-            localStorage.setItem('historicoPachecoWhite', JSON.stringify(historico));
+            localStorage.setItem('historicoPachecoWhiteFix', JSON.stringify(historico));
             salvarDados();
         }
 
@@ -356,7 +366,7 @@
                     </div>
                     <div class="hist-acoes">
                         <button class="btn-hist btn-view" onclick="verDetalhes(${compra.id})">Ver Itens</button>
-                        <button class="btn-hist btn-del-hist" onclick="excluirHistorico(${compra.id})" style="background: rgba(239, 68, 68, 0.05); color: var(--delete); border: 1px solid rgba(239, 68, 68, 0.1);">Apagar</button>
+                        <button class="btn-hist btn-del-hist" onclick="excluirHistorico(${compra.id})">Apagar</button>
                     </div>
                 `;
                 container.appendChild(div);
@@ -380,9 +390,9 @@
 
         function fecharModal() { document.getElementById('modal-itens').style.display = 'none'; }
         function removerItem(i) { if(confirm("Remover este item?")) { compras.splice(i, 1); if(indexSendoEditado===i) indexSendoEditado=-1; salvarDados(); } }
-        function excluirHistorico(id) { if(confirm("Apagar histórico?")){ historico = historico.filter(h => h.id !== id); localStorage.setItem('historicoPachecoWhite', JSON.stringify(historico)); renderizarHistorico(); } }
+        function excluirHistorico(id) { if(confirm("Apagar histórico?")){ historico = historico.filter(h => h.id !== id); localStorage.setItem('historicoPachecoWhiteFix', JSON.stringify(historico)); renderizarHistorico(); } }
         function alternarComprado(i) { compras[i].comprado = !compras[i].comprado; salvarDados(); }
-        function salvarDados() { localStorage.setItem('comprasPachecoWhite', JSON.stringify(compras)); renderizarLista(); }
+        function salvarDados() { localStorage.setItem('comprasPachecoWhiteFix', JSON.stringify(compras)); renderizarLista(); }
 
         renderizarLista();
     </script>
