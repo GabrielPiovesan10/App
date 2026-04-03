@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Lista de Compras - Seu Pacheco</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            /* Cores Dark Mode Premium */
+            --bg-color: #000000; /* Preto Total */
+            --card-bg: #0A0A0A; /* Cinza Quase Preto para elementos */
+            --primary: #FF4757; /* Vermelho Vibrante de Restaurante */
+            --primary-hover: #FF6B81;
+            --text-dark: #FFFFFF; /* Texto Branco no Escuro */
+            --text-light: #A0A0A0; /* Texto Cinza Claro */
+            --border: #222222; /* Borda sutil */
+            --success: #2ECC71; /* Verde Concluído */
+            --delete: #FF4757; /* Vermelho Remover */
+        }
+
+        * { 
+            box-sizing: border-box; 
+            margin: 0; 
+            padding: 0; 
+        }
+
+        /* Mantendo trava anti-bugs de layout */
+        html, body {
+            overflow-x: hidden;
+            width: 100%;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            display: flex;
+            justify-content: center;
+            padding: 15px;
+            min-height: 100vh;
+        }
+
+        .app-container {
+            background: #080808;
+            width: 100%;
+            max-width: 500px;
+            border-radius: 20px;
+            /* Sombra escura sutil com tom avermelhado */
+            box-shadow: 0 15px 40px rgba(255, 71, 87, 0.05);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+
+        .header {
+            /* Fundo preto com linha de destaque */
+            background: #000000;
+            color: white;
+            padding: 25px 20px;
+            text-align: center;
+            border-bottom: 2px solid var(--primary);
+        }
+
+        .header h1 {
+            font-size: 22px;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .header p {
+            font-size: 13px;
+            color: var(--text-light);
+            font-weight: 400;
+        }
+
+        .input-group {
+            padding: 20px;
+            /* Fundo ligeiramente mais claro para contraste sutil */
+            background: #0A0A0A;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .inputs-row {
+            display: flex;
+            gap: 10px;
+            width: 100%;
+        }
+
+        input {
+            padding: 14px;
+            /* Inputs escuros com borda */
+            border: 1px solid #333;
+            border-radius: 12px;
+            font-size: 16px;
+            outline: none;
+            min-width: 0;
+            background: #111;
+            color: var(--text-dark);
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        input:focus { 
+            border-color: var(--primary);
+            /* Efeito neon suave no focus */
+            box-shadow: 0 0 10px rgba(255, 71, 87, 0.3);
+        }
+
+        input::placeholder {
+            color: #555555;
+        }
+
+        #nome-item { flex: 2; }
+        #qtd-item { flex: 1; text-align: center; }
+
+        .btn-adicionar {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.2s;
+            text-transform: uppercase;
+        }
+
+        .btn-adicionar:hover { background: var(--primary-hover); }
+
+        .lista-compras {
+            list-style: none;
+            overflow-y: auto;
+            flex: 1;
+            padding: 10px 20px;
+            background: #080808;
+        }
+
+        .item-compra {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 0;
+            border-bottom: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+
+        .item-compra:hover {
+            background: #0D0D0D;
+        }
+
+        .item-compra:last-child { border-bottom: none; }
+
+        .item-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex: 1;
+            cursor: pointer;
+        }
+
+        .checkbox-gigante {
+            width: 28px;
+            height: 28px;
+            border: 2px solid var(--border);
+            border-radius: 9px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: transparent;
+            transition: all 0.2s;
+            background: #111;
+        }
+
+        .item-compra.comprado .checkbox-gigante {
+            background: var(--success);
+            border-color: var(--success);
+            color: #000000;
+        }
+
+        .item-textos {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .nome { font-size: 17px; font-weight: 600; color: var(--text-dark); }
+        .qtd { font-size: 14px; color: #666666; font-weight: 400; }
+
+        .item-compra.comprado .nome, 
+        .item-compra.comprado .qtd {
+            text-decoration: line-through;
+            color: #444444; /* Cinza escuro para riscado no preto */
+        }
+
+        .btn-remover {
+            color: var(--border);
+            background: none;
+            border: none;
+            font-size: 20px;
+            padding: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-remover:hover {
+            color: var(--delete);
+            background: rgba(255, 71, 87, 0.1);
+            border-radius: 8px;
+        }
+
+        .rodape {
+            padding: 15px 20px;
+            background: #0A0A0A;
+            border-top: 1px solid var(--border);
+        }
+
+        .btn-limpar {
+            width: 100%;
+            padding: 14px;
+            background: #1A1A1A;
+            color: var(--text-light);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+
+        .btn-limpar:hover {
+            background: #252525;
+            color: var(--text-dark);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <div class="header">
+            <h1><i class="fas fa-shopping-cart" style="color: var(--primary);"></i> Compras</h1>
+            <p>Teste</p>
+        </div>
+        
+        <div class="input-group">
+            <div class="inputs-row">
+                <input type="text" id="nome-item" placeholder="Ex: Filé Mignon" onkeypress="verificarEnter(event)">
+                <input type="text" id="qtd-item" placeholder="Qtd (Ex: 10kg)" onkeypress="verificarEnter(event)">
+            </div>
+            <button class="btn-adicionar" onclick="adicionarItem()">
+                Adicionar à Lista
+            </button>
+        </div>
+
+        <ul class="lista-compras" id="lista">
+            </ul>
+
+        <div class="rodape">
+            <button class="btn-limpar" onclick="limparComprados()">
+                <i class="fas fa-broom"></i> Limpar itens comprados
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Lógica permanece a mesma, apenas atualizando nomes de variáveis e localStorage para esse projeto
+        let comprasRestaurante = JSON.parse(localStorage.getItem('comprasRestauranteBlack')) || [];
+
+        function renderizarLista() {
+            const lista = document.getElementById('lista');
+            lista.innerHTML = '';
+
+            if (comprasRestaurante.length === 0) {
+                lista.innerHTML = '<li style="text-align:center; padding:40px; color:#555555; background: transparent; border: none; font-style: italic;">A comanda de compras está vazia.</li>';
+                return;
+            }
+
+            comprasRestaurante.forEach((item, index) => {
+                const li = document.createElement('li');
+                li.className = `item-compra ${item.comprado ? 'comprado' : ''}`;
+                
+                li.innerHTML = `
+                    <div class="item-info" onclick="alternarComprado(${index})">
+                        <div class="checkbox-gigante"><i class="fas fa-check"></i></div>
+                        <div class="item-textos">
+                            <span class="nome">${item.nome}</span>
+                            ${item.qtd ? `<span class="qtd">Qtd: ${item.qtd}</span>` : ''}
+                        </div>
+                    </div>
+                    <button class="btn-remover" onclick="removerItem(${index})"><i class="fas fa-trash"></i></button>
+                `;
+                lista.appendChild(li);
+            });
+        }
+
+        function adicionarItem() {
+            const inputNome = document.getElementById('nome-item');
+            const inputQtd = document.getElementById('qtd-item');
+            const nome = inputNome.value.trim();
+            const qtd = inputQtd.value.trim();
+
+            if (nome !== '') {
+                comprasRestaurante.unshift({ nome: nome, qtd: qtd, comprado: false });
+                inputNome.value = '';
+                inputQtd.value = '';
+                inputNome.focus();
+                salvarDados();
+            }
+        }
+
+        function verificarEnter(event) {
+            if (event.key === 'Enter') adicionarItem();
+        }
+
+        function alternarComprado(index) {
+            comprasRestaurante[index].comprado = !comprasRestaurante[index].comprado;
+            salvarDados();
+        }
+
+        function removerItem(index) {
+            comprasRestaurante.splice(index, 1);
+            salvarDados();
+        }
+
+        function limparComprados() {
+            comprasRestaurante = comprasRestaurante.filter(item => !item.comprado);
+            salvarDados();
+        }
+
+        function salvarDados() {
+            localStorage.setItem('comprasRestauranteBlack', JSON.stringify(comprasRestaurante));
+            renderizarLista();
+        }
+
+        renderizarLista();
+    </script>
+</body>
+</html>
