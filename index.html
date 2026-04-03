@@ -3,354 +3,385 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Lista de Compras - Seu Pacheco</title>
+    <title>Compras</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
         :root {
-            /* Cores Dark Mode Premium */
-            --bg-color: #000000; /* Preto Total */
-            --card-bg: #0A0A0A; /* Cinza Quase Preto para elementos */
-            --primary: #FF4757; /* Vermelho Vibrante de Restaurante */
-            --primary-hover: #FF6B81;
-            --text-dark: #FFFFFF; /* Texto Branco no Escuro */
-            --text-light: #A0A0A0; /* Texto Cinza Claro */
-            --border: #222222; /* Borda sutil */
-            --success: #2ECC71; /* Verde Concluído */
-            --delete: #FF4757; /* Vermelho Remover */
+            --bg-color: #000000; 
+            --card-bg: #0A0A0A; 
+            --primary: #F5A623; 
+            --primary-hover: #E59415;
+            --text-dark: #FFFFFF; 
+            --text-light: #A0A0A0; 
+            --border: #222222; 
+            --success: #2ECC71;
+            --delete: #FF4757;
+            --edit: #3498db;
         }
 
-        * { 
-            box-sizing: border-box; 
-            margin: 0; 
-            padding: 0; 
-        }
-
-        /* Mantendo trava anti-bugs de layout */
-        html, body {
-            overflow-x: hidden;
-            width: 100%;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body { overflow-x: hidden; width: 100%; background-color: var(--bg-color); }
 
         body {
             font-family: 'Inter', sans-serif;
-            background-color: var(--bg-color);
             color: var(--text-dark);
             display: flex;
             justify-content: center;
-            padding: 15px;
-            min-height: 100vh;
+            padding: 10px;
         }
 
         .app-container {
             background: #080808;
             width: 100%;
             max-width: 500px;
-            border-radius: 20px;
-            /* Sombra escura sutil com tom avermelhado */
-            box-shadow: 0 15px 40px rgba(255, 71, 87, 0.05);
+            border-radius: 24px;
+            box-shadow: 0 15px 40px rgba(245, 166, 35, 0.05);
             display: flex;
             flex-direction: column;
-            overflow: hidden;
             border: 1px solid var(--border);
+            margin-bottom: 50px;
         }
 
         .header {
-            /* Fundo preto com linha de destaque */
             background: #000000;
-            color: white;
             padding: 25px 20px;
             text-align: center;
             border-bottom: 2px solid var(--primary);
         }
 
-        .header h1 {
-            font-size: 22px;
-            margin-bottom: 5px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+        .total-container { margin-top: 15px; }
+        .total-label { font-size: 11px; color: var(--text-light); text-transform: uppercase; letter-spacing: 2px; }
+        .total-value { font-size: 32px; font-weight: 800; color: var(--primary); display: block; }
+
+        .section-title {
+            font-size: 11px; color: var(--primary); text-transform: uppercase;
+            letter-spacing: 1px; padding: 15px 20px 5px; font-weight: 700;
         }
 
-        .header p {
-            font-size: 13px;
-            color: var(--text-light);
-            font-weight: 400;
+        .planning-box { padding: 10px 20px; background: #0A0A0A; display: flex; flex-direction: column; gap: 10px; }
+
+        textarea {
+            width: 100%; height: 80px; background: #111; border: 1px solid #333;
+            border-radius: 12px; color: #fff; padding: 12px; font-family: 'Inter', sans-serif;
+            font-size: 14px; outline: none; resize: none;
+        }
+
+        .btn-importar {
+            background: rgba(245, 166, 35, 0.1); color: var(--primary);
+            border: 1px solid var(--primary); padding: 12px; border-radius: 10px;
+            font-size: 12px; font-weight: 700; cursor: pointer; text-transform: uppercase;
         }
 
         .input-group {
-            padding: 20px;
-            /* Fundo ligeiramente mais claro para contraste sutil */
-            background: #0A0A0A;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
+            padding: 10px 20px 20px; background: #0A0A0A;
+            border-bottom: 1px solid var(--border); display: flex; flex-direction: column; gap: 10px;
         }
 
-        .inputs-row {
-            display: flex;
-            gap: 10px;
-            width: 100%;
-        }
+        .inputs-row { display: flex; gap: 8px; width: 100%; }
 
         input {
-            padding: 14px;
-            /* Inputs escuros com borda */
-            border: 1px solid #333;
-            border-radius: 12px;
-            font-size: 16px;
-            outline: none;
-            min-width: 0;
-            background: #111;
-            color: var(--text-dark);
-            font-family: 'Inter', sans-serif;
-            transition: all 0.3s ease;
+            padding: 14px; border: 1px solid #333; border-radius: 12px;
+            font-size: 15px; outline: none; background: #111; color: var(--text-dark); min-width: 0;
         }
+        
+        input:focus { border-color: var(--primary); }
 
-        input:focus { 
-            border-color: var(--primary);
-            /* Efeito neon suave no focus */
-            box-shadow: 0 0 10px rgba(255, 71, 87, 0.3);
+        #nome-lista-atual {
+            width: 100%; background: transparent; border: none; border-bottom: 1px solid #222;
+            color: var(--primary); font-weight: 700; font-size: 16px; padding: 10px 20px; outline: none; text-align: center;
         }
-
-        input::placeholder {
-            color: #555555;
-        }
-
-        #nome-item { flex: 2; }
-        #qtd-item { flex: 1; text-align: center; }
 
         .btn-adicionar {
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 15px;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: 700;
-            cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 8px;
-            transition: background 0.2s;
-            text-transform: uppercase;
+            background: var(--primary); color: #000; border: none;
+            padding: 16px; border-radius: 12px; font-size: 14px; font-weight: 800;
+            cursor: pointer; text-transform: uppercase; transition: 0.3s;
         }
 
-        .btn-adicionar:hover { background: var(--primary-hover); }
-
-        .lista-compras {
-            list-style: none;
-            overflow-y: auto;
-            flex: 1;
-            padding: 10px 20px;
-            background: #080808;
+        /* Cor do botão quando estiver editando */
+        .btn-adicionar.modo-edicao {
+            background: var(--edit);
+            color: #fff;
         }
+
+        .lista-compras { list-style: none; padding: 10px 20px; min-height: 100px; }
 
         .item-compra {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 16px 0;
-            border-bottom: 1px solid var(--border);
-            transition: all 0.3s ease;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 18px 0; border-bottom: 1px solid var(--border);
+            transition: background 0.3s;
         }
 
-        .item-compra:hover {
-            background: #0D0D0D;
+        .item-compra.editando {
+            background: rgba(52, 152, 219, 0.1);
+            border-left: 4px solid var(--edit);
+            padding-left: 10px;
         }
 
-        .item-compra:last-child { border-bottom: none; }
+        .item-info { display: flex; align-items: center; gap: 12px; flex: 1; cursor: pointer; }
 
-        .item-info {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            flex: 1;
-            cursor: pointer;
+        .checkbox-custom {
+            width: 26px; height: 26px; border: 2px solid var(--border);
+            border-radius: 8px; display: flex; justify-content: center; align-items: center;
+            color: transparent; background: #111;
         }
 
-        .checkbox-gigante {
-            width: 28px;
-            height: 28px;
-            border: 2px solid var(--border);
-            border-radius: 9px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: transparent;
-            transition: all 0.2s;
-            background: #111;
-        }
-
-        .item-compra.comprado .checkbox-gigante {
-            background: var(--success);
-            border-color: var(--success);
-            color: #000000;
-        }
-
-        .item-textos {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .nome { font-size: 17px; font-weight: 600; color: var(--text-dark); }
-        .qtd { font-size: 14px; color: #666666; font-weight: 400; }
+        .item-compra.comprado .checkbox-custom { background: var(--success); border-color: var(--success); color: #000; }
+        .item-compra.comprado .checkbox-custom i { display: block; }
 
         .item-compra.comprado .nome, 
-        .item-compra.comprado .qtd {
-            text-decoration: line-through;
-            color: #444444; /* Cinza escuro para riscado no preto */
+        .item-compra.comprado .detalhes, 
+        .item-compra.comprado .subtotal-val {
+            text-decoration: line-through; color: #333;
         }
 
-        .btn-remover {
-            color: var(--border);
-            background: none;
-            border: none;
-            font-size: 20px;
-            padding: 10px;
-            cursor: pointer;
-            transition: all 0.2s;
+        .item-textos { display: flex; flex-direction: column; }
+        .nome { font-size: 16px; font-weight: 600; }
+        .detalhes { font-size: 12px; color: var(--text-light); margin-top: 4px; }
+
+        .subtotal-val { font-size: 15px; font-weight: 700; color: var(--primary); margin-right: 5px; }
+
+        .btn-acao-item {
+            background: none; border: none; font-size: 18px; padding: 8px; cursor: pointer;
+        }
+        .btn-edit { color: var(--edit); }
+        .btn-del { color: #333; }
+
+        .rodape { padding: 20px; background: #0A0A0A; border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 10px; }
+
+        .btn-salvar {
+            background: var(--success); color: #000; border: none;
+            padding: 15px; border-radius: 12px; font-weight: 800;
+            font-size: 15px; cursor: pointer; text-transform: uppercase;
         }
 
-        .btn-remover:hover {
-            color: var(--delete);
-            background: rgba(255, 71, 87, 0.1);
-            border-radius: 8px;
-        }
+        .historico-section { padding: 20px; background: #000; border-top: 4px solid var(--primary); }
+        .historico-titulo { font-size: 14px; font-weight: 800; color: var(--primary); text-transform: uppercase; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+        .card-historico { background: #0A0A0A; border: 1px solid var(--border); border-radius: 15px; padding: 15px; margin-bottom: 15px; }
+        .hist-total { font-size: 16px; font-weight: 800; color: var(--success); }
+        .btn-hist { flex: 1; padding: 8px; border-radius: 8px; border: none; font-size: 12px; font-weight: 700; cursor: pointer; }
 
-        .rodape {
-            padding: 15px 20px;
-            background: #0A0A0A;
-            border-top: 1px solid var(--border);
-        }
-
-        .btn-limpar {
-            width: 100%;
-            padding: 14px;
-            background: #1A1A1A;
-            color: var(--text-light);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            font-weight: 600;
-            font-size: 15px;
-            cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.2s;
-        }
-
-        .btn-limpar:hover {
-            background: #252525;
-            color: var(--text-dark);
-        }
+        #modal-itens { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 1000; padding: 20px; justify-content: center; align-items: center; }
+        .modal-content { background: #0A0A0A; width: 100%; max-width: 400px; border-radius: 20px; padding: 20px; border: 1px solid var(--primary); max-height: 80vh; overflow-y: auto; }
     </style>
 </head>
 <body>
 
     <div class="app-container">
         <div class="header">
-            <h1><i class="fas fa-shopping-cart" style="color: var(--primary);"></i> Compras</h1>
-            <p>Teste</p>
+            <h1 style="font-size: 12px; letter-spacing: 3px; color: #444;">COMPRAS</h1>
+            <div class="total-container">
+                <span class="total-label">Subtotal da Compra</span>
+                <span class="total-value" id="total-geral">R$ 0,00</span>
+            </div>
         </div>
         
-        <div class="input-group">
-            <div class="inputs-row">
-                <input type="text" id="nome-item" placeholder="Ex: Filé Mignon" onkeypress="verificarEnter(event)">
-                <input type="text" id="qtd-item" placeholder="Qtd (Ex: 10kg)" onkeypress="verificarEnter(event)">
-            </div>
-            <button class="btn-adicionar" onclick="adicionarItem()">
-                Adicionar à Lista
+        <input type="text" id="nome-lista-atual" placeholder="Digite aqui o titulo Ex: Compras de Quarta">
+
+        <div class="section-title">1. Planejamento (O que falta?)</div>
+        <div class="planning-box">
+            <textarea id="rascunho-texto" placeholder="Digite os itens da lista:"></textarea>
+            <button class="btn-importar" onclick="importarDoRascunho()">
+                <i class="fas fa-magic"></i> Gerar Checklist
             </button>
         </div>
 
-        <ul class="lista-compras" id="lista">
-            </ul>
+        <div class="section-title">2. No Mercado (Preços e Pesos)</div>
+        <div class="input-group" id="ancora-input">
+            <input type="text" id="nome-item" placeholder="Produto">
+            <div class="inputs-row">
+                <input type="number" id="qtd-item" placeholder="Qtd">
+                <input type="number" step="0.01" id="peso-item" placeholder="Kg">
+                <input type="number" step="0.01" id="preco-item" placeholder="R$ Unit.">
+            </div>
+            <button class="btn-adicionar" id="btn-add-main" onclick="adicionarItem()">Adicionar Item</button>
+        </div>
+
+        <ul class="lista-compras" id="lista"></ul>
 
         <div class="rodape">
-            <button class="btn-limpar" onclick="limparComprados()">
-                <i class="fas fa-broom"></i> Limpar itens comprados
+            <button class="btn-salvar" onclick="salvarListaParaHistorico()">
+                <i class="fas fa-check-double"></i> Finalizar e Arquivar
             </button>
+        </div>
+
+        <div class="historico-section">
+            <div class="historico-titulo"><i class="fas fa-history"></i> Histórico</div>
+            <div id="historico-lista"></div>
+        </div>
+    </div>
+
+    <div id="modal-itens">
+        <div class="modal-content">
+            <h2 id="modal-titulo-lista" style="color: var(--primary); font-size: 18px; margin-bottom: 20px;"></h2>
+            <ul id="modal-lista-itens" style="list-style: none;"></ul>
+            <button onclick="fecharModal()" style="width: 100%; margin-top: 20px; padding: 12px; background: var(--primary); border: none; border-radius: 12px; font-weight: 800;">Fechar</button>
         </div>
     </div>
 
     <script>
-        // Lógica permanece a mesma, apenas atualizando nomes de variáveis e localStorage para esse projeto
-        let comprasRestaurante = JSON.parse(localStorage.getItem('comprasRestauranteBlack')) || [];
+        let compras = JSON.parse(localStorage.getItem('comprasPachecoV12')) || [];
+        let historico = JSON.parse(localStorage.getItem('historicoPachecoV12')) || [];
+        let indexSendoEditado = -1; // -1 significa que não estamos editando nada
+
+        function formatarMoeda(v) { return v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }); }
 
         function renderizarLista() {
             const lista = document.getElementById('lista');
+            const displayTotal = document.getElementById('total-geral');
             lista.innerHTML = '';
+            let total = 0;
 
-            if (comprasRestaurante.length === 0) {
-                lista.innerHTML = '<li style="text-align:center; padding:40px; color:#555555; background: transparent; border: none; font-style: italic;">A comanda de compras está vazia.</li>';
-                return;
-            }
-
-            comprasRestaurante.forEach((item, index) => {
-                const li = document.createElement('li');
-                li.className = `item-compra ${item.comprado ? 'comprado' : ''}`;
+            compras.forEach((it, i) => {
+                const q = parseFloat(it.qtd) || 1;
+                const p = parseFloat(it.peso) || 0;
+                const v = parseFloat(it.preco) || 0;
+                const sub = p > 0 ? (q * p * v) : (q * v);
+                total += sub;
                 
+                const li = document.createElement('li');
+                li.className = `item-compra ${it.comprado ? 'comprado' : ''} ${indexSendoEditado === i ? 'editando' : ''}`;
+                const infoPeso = p > 0 ? `${p}kg • ` : '';
+
                 li.innerHTML = `
-                    <div class="item-info" onclick="alternarComprado(${index})">
-                        <div class="checkbox-gigante"><i class="fas fa-check"></i></div>
+                    <div class="item-info" onclick="alternarComprado(${i})">
+                        <div class="checkbox-custom"><i class="fas fa-check"></i></div>
                         <div class="item-textos">
-                            <span class="nome">${item.nome}</span>
-                            ${item.qtd ? `<span class="qtd">Qtd: ${item.qtd}</span>` : ''}
+                            <span class="nome">${it.nome}</span>
+                            <span class="detalhes">${it.qtd}x • ${infoPeso}${formatarMoeda(v)}</span>
                         </div>
                     </div>
-                    <button class="btn-remover" onclick="removerItem(${index})"><i class="fas fa-trash"></i></button>
+                    <div style="display:flex; align-items:center;">
+                        <span class="subtotal-val">${formatarMoeda(sub)}</span>
+                        <button class="btn-acao-item btn-edit" onclick="iniciarEdicao(${i})"><i class="fas fa-pencil-alt"></i></button>
+                        <button class="btn-acao-item btn-del" onclick="removerItem(${i})"><i class="fas fa-trash-alt"></i></button>
+                    </div>
                 `;
                 lista.appendChild(li);
             });
+            displayTotal.textContent = formatarMoeda(total);
+            renderizarHistorico();
+        }
+
+        // NOVO: Entra no modo de edição sem apagar o item da lista
+        function iniciarEdicao(index) {
+            indexSendoEditado = index;
+            const item = compras[index];
+            
+            document.getElementById('nome-item').value = item.nome;
+            document.getElementById('qtd-item').value = item.qtd;
+            document.getElementById('peso-item').value = item.peso;
+            document.getElementById('preco-item').value = item.preco;
+            
+            // Muda o visual do botão
+            const btn = document.getElementById('btn-add-main');
+            btn.innerText = "Atualizar Item";
+            btn.classList.add('modo-edicao');
+            
+            document.getElementById('ancora-input').scrollIntoView({ behavior: 'smooth' });
+            renderizarLista();
         }
 
         function adicionarItem() {
-            const inputNome = document.getElementById('nome-item');
-            const inputQtd = document.getElementById('qtd-item');
-            const nome = inputNome.value.trim();
-            const qtd = inputQtd.value.trim();
+            const n = document.getElementById('nome-item');
+            const q = document.getElementById('qtd-item');
+            const p = document.getElementById('peso-item'); 
+            const v = document.getElementById('preco-item');
 
-            if (nome !== '') {
-                comprasRestaurante.unshift({ nome: nome, qtd: qtd, comprado: false });
-                inputNome.value = '';
-                inputQtd.value = '';
-                inputNome.focus();
-                salvarDados();
+            if (!n.value.trim()) return alert("Digite o nome do produto!");
+
+            const dadosItem = { 
+                nome: n.value.trim(), 
+                qtd: q.value || 1, 
+                peso: p.value.replace(',', '.') || "", 
+                preco: v.value.replace(',', '.') || 0, 
+                comprado: indexSendoEditado !== -1 ? compras[indexSendoEditado].comprado : false 
+            };
+
+            if (indexSendoEditado !== -1) {
+                // Modo Edição: Sobrescreve o item existente
+                compras[indexSendoEditado] = dadosItem;
+                indexSendoEditado = -1; // Sai do modo edição
+                const btn = document.getElementById('btn-add-main');
+                btn.innerText = "Adicionar Item";
+                btn.classList.remove('modo-edicao');
+            } else {
+                // Modo Normal: Adiciona um novo
+                compras.unshift(dadosItem);
             }
-        }
-
-        function verificarEnter(event) {
-            if (event.key === 'Enter') adicionarItem();
-        }
-
-        function alternarComprado(index) {
-            comprasRestaurante[index].comprado = !comprasRestaurante[index].comprado;
+            
+            n.value = ''; q.value = ''; p.value = ''; v.value = '';
             salvarDados();
         }
 
-        function removerItem(index) {
-            comprasRestaurante.splice(index, 1);
+        function importarDoRascunho() {
+            const texto = document.getElementById('rascunho-texto').value.trim();
+            if (!texto) return;
+            texto.split('\n').forEach(nome => {
+                if (nome.trim()) compras.push({ nome: nome.trim(), qtd: 1, peso: "", preco: 0, comprado: false });
+            });
+            document.getElementById('rascunho-texto').value = '';
             salvarDados();
         }
 
-        function limparComprados() {
-            comprasRestaurante = comprasRestaurante.filter(item => !item.comprado);
+        function salvarListaParaHistorico() {
+            if (compras.length === 0) return;
+            const total = compras.reduce((acc, it) => acc + ((parseFloat(it.peso)||0) > 0 ? (it.qtd*it.peso*it.preco) : (it.qtd*it.preco)), 0);
+            historico.unshift({
+                id: Date.now(),
+                titulo: document.getElementById('nome-lista-atual').value.trim() || "Compra Avulsa",
+                data: new Date().toLocaleString('pt-BR'),
+                total: total,
+                itens: [...compras]
+            });
+            compras = [];
+            document.getElementById('nome-lista-atual').value = '';
+            localStorage.setItem('historicoPachecoV12', JSON.stringify(historico));
             salvarDados();
         }
 
-        function salvarDados() {
-            localStorage.setItem('comprasRestauranteBlack', JSON.stringify(comprasRestaurante));
-            renderizarLista();
+        function renderizarHistorico() {
+            const container = document.getElementById('historico-lista');
+            container.innerHTML = '';
+            historico.forEach(compra => {
+                const div = document.createElement('div');
+                div.className = 'card-historico';
+                div.innerHTML = `
+                    <span class="hist-nome-lista">${compra.titulo}</span>
+                    <div class="hist-header">
+                        <span style="font-size:10px; color:#444;">${compra.data}</span>
+                        <span class="hist-total">${formatarMoeda(compra.total)}</span>
+                    </div>
+                    <div class="hist-acoes">
+                        <button class="btn-hist btn-view" onclick="verDetalhes(${compra.id})">Ver Itens</button>
+                        <button class="btn-hist btn-del-hist" onclick="excluirHistorico(${compra.id})" style="background:rgba(255,71,87,0.1); color:var(--delete); border:none;">Apagar</button>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
         }
+
+        function verDetalhes(id) {
+            const compra = historico.find(h => h.id === id);
+            document.getElementById('modal-titulo-lista').innerText = compra.titulo;
+            const listaModal = document.getElementById('modal-lista-itens');
+            listaModal.innerHTML = '';
+            compra.itens.forEach(it => {
+                const sub = (parseFloat(it.peso)||0) > 0 ? (it.qtd*it.peso*it.preco) : (it.qtd*it.preco);
+                listaModal.innerHTML += `<li style="padding: 10px 0; border-bottom: 1px solid #1a1a1a; display:flex; justify-content:space-between;">
+                    <span>${it.qtd}x ${it.nome} ${it.peso > 0 ? '('+it.peso+'kg)' : ''}</span>
+                    <span style="color:var(--primary)">${formatarMoeda(sub)}</span>
+                </li>`;
+            });
+            document.getElementById('modal-itens').style.display = 'flex';
+        }
+
+        function fecharModal() { document.getElementById('modal-itens').style.display = 'none'; }
+        function removerItem(i) { if(confirm("Remover este item?")) { compras.splice(i, 1); if(indexSendoEditado===i) indexSendoEditado=-1; salvarDados(); } }
+        function excluirHistorico(id) { if(confirm("Apagar histórico?")){ historico = historico.filter(h => h.id !== id); localStorage.setItem('historicoPachecoV12', JSON.stringify(historico)); renderizarHistorico(); } }
+        function alternarComprado(i) { compras[i].comprado = !compras[i].comprado; salvarDados(); }
+        function salvarDados() { localStorage.setItem('comprasPachecoV12', JSON.stringify(compras)); renderizarLista(); }
 
         renderizarLista();
     </script>
