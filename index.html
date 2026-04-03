@@ -3,26 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Compras</title>
+    <title>Gestão Seu Pacheco - White Edition</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
         :root {
-            --bg-color: #000000; 
-            --card-bg: #0A0A0A; 
-            --primary: #F5A623; 
+            /* Novas Cores - Fundo Branco */
+            --bg-color: #FFFFFF; /* Fundo Totalmente Branco */
+            --card-bg: #F9FAFB; /* Cinza Muito Claro para cartões e inputs */
+            --primary: #F5A623; /* Mantive o Dourado para destaques e botões */
             --primary-hover: #E59415;
-            --text-dark: #FFFFFF; 
-            --text-light: #A0A0A0; 
-            --border: #222222; 
-            --success: #2ECC71;
-            --delete: #FF4757;
-            --edit: #3498db;
+            --text-dark: #1F2937; /* Texto Escuro para contraste no branco */
+            --text-light: #6B7280; /* Texto Cinza Médio para detalhes */
+            --border: #E5E7EB; /* Borda Clara e sutil */
+            --success: #10B981; /* Verde Concluído (ajustado para fundo claro) */
+            --delete: #EF4444; /* Vermelho Remover (ajustado para fundo claro) */
+            --edit: #3B82F6; /* Azul Editar (ajustado para fundo claro) */
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        html, body { overflow-x: hidden; width: 100%; background-color: var(--bg-color); }
+        html, body { overflow-x: hidden; width: 100%; height: 100%; background-color: var(--bg-color); }
 
         body {
             font-family: 'Inter', sans-serif;
@@ -33,11 +34,12 @@
         }
 
         .app-container {
-            background: #080808;
+            background: var(--bg-color);
             width: 100%;
             max-width: 500px;
             border-radius: 24px;
-            box-shadow: 0 15px 40px rgba(245, 166, 35, 0.05);
+            /* Sombra suave e clara */
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
             display: flex;
             flex-direction: column;
             border: 1px solid var(--border);
@@ -45,7 +47,7 @@
         }
 
         .header {
-            background: #000000;
+            background: var(--bg-color);
             padding: 25px 20px;
             text-align: center;
             border-bottom: 2px solid var(--primary);
@@ -53,20 +55,21 @@
 
         .total-container { margin-top: 15px; }
         .total-label { font-size: 11px; color: var(--text-light); text-transform: uppercase; letter-spacing: 2px; }
-        .total-value { font-size: 32px; font-weight: 800; color: var(--primary); display: block; }
+        .total-value { font-size: 32px; font-weight: 800; color: var(--text-dark); display: block; }
 
         .section-title {
             font-size: 11px; color: var(--primary); text-transform: uppercase;
             letter-spacing: 1px; padding: 15px 20px 5px; font-weight: 700;
         }
 
-        .planning-box { padding: 10px 20px; background: #0A0A0A; display: flex; flex-direction: column; gap: 10px; }
+        .planning-box { padding: 10px 20px; background: var(--card-bg); display: flex; flex-direction: column; gap: 10px; border-bottom: 1px solid var(--border); }
 
         textarea {
-            width: 100%; height: 80px; background: #111; border: 1px solid #333;
-            border-radius: 12px; color: #fff; padding: 12px; font-family: 'Inter', sans-serif;
-            font-size: 14px; outline: none; resize: none;
+            width: 100%; height: 80px; background: #FFFFFF; border: 1px solid var(--border);
+            border-radius: 12px; color: var(--text-dark); padding: 12px; font-family: 'Inter', sans-serif;
+            font-size: 14px; outline: none; resize: none; transition: 0.3s;
         }
+        textarea:focus { border-color: var(--primary); }
 
         .btn-importar {
             background: rgba(245, 166, 35, 0.1); color: var(--primary);
@@ -75,37 +78,37 @@
         }
 
         .input-group {
-            padding: 10px 20px 20px; background: #0A0A0A;
+            padding: 10px 20px 20px; background: var(--bg-color);
             border-bottom: 1px solid var(--border); display: flex; flex-direction: column; gap: 10px;
         }
 
         .inputs-row { display: flex; gap: 8px; width: 100%; }
 
         input {
-            padding: 14px; border: 1px solid #333; border-radius: 12px;
-            font-size: 15px; outline: none; background: #111; color: var(--text-dark); min-width: 0;
+            padding: 14px; border: 1px solid var(--border); border-radius: 12px;
+            font-size: 15px; outline: none; background: var(--card-bg); color: var(--text-dark); min-width: 0;
+            transition: 0.3s;
         }
         
-        input:focus { border-color: var(--primary); }
+        input:focus { border-color: var(--primary); background: #FFFFFF; }
 
         #nome-lista-atual {
-            width: 100%; background: transparent; border: none; border-bottom: 1px solid #222;
+            width: 100%; background: transparent; border: none; border-bottom: 1px solid var(--border);
             color: var(--primary); font-weight: 700; font-size: 16px; padding: 10px 20px; outline: none; text-align: center;
         }
 
         .btn-adicionar {
-            background: var(--primary); color: #000; border: none;
+            background: var(--primary); color: #FFFFFF; border: none;
             padding: 16px; border-radius: 12px; font-size: 14px; font-weight: 800;
             cursor: pointer; text-transform: uppercase; transition: 0.3s;
         }
+        .btn-adicionar:hover { background: var(--primary-hover); }
 
-        /* Cor do botão quando estiver editando */
         .btn-adicionar.modo-edicao {
             background: var(--edit);
-            color: #fff;
         }
 
-        .lista-compras { list-style: none; padding: 10px 20px; min-height: 100px; }
+        .lista-compras { list-style: none; padding: 10px 20px; min-height: 100px; background: #FFFFFF;}
 
         .item-compra {
             display: flex; align-items: center; justify-content: space-between;
@@ -114,7 +117,7 @@
         }
 
         .item-compra.editando {
-            background: rgba(52, 152, 219, 0.1);
+            background: rgba(59, 130, 246, 0.05);
             border-left: 4px solid var(--edit);
             padding-left: 10px;
         }
@@ -124,66 +127,74 @@
         .checkbox-custom {
             width: 26px; height: 26px; border: 2px solid var(--border);
             border-radius: 8px; display: flex; justify-content: center; align-items: center;
-            color: transparent; background: #111;
+            color: transparent; background: var(--card-bg); transition: 0.2s;
         }
 
-        .item-compra.comprado .checkbox-custom { background: var(--success); border-color: var(--success); color: #000; }
+        .item-compra.comprado .checkbox-custom { background: var(--success); border-color: var(--success); color: #FFFFFF; }
         .item-compra.comprado .checkbox-custom i { display: block; }
 
         .item-compra.comprado .nome, 
         .item-compra.comprado .detalhes, 
         .item-compra.comprado .subtotal-val {
-            text-decoration: line-through; color: #333;
+            text-decoration: line-through; color: var(--text-light);
         }
 
         .item-textos { display: flex; flex-direction: column; }
-        .nome { font-size: 16px; font-weight: 600; }
+        .nome { font-size: 16px; font-weight: 600; color: var(--text-dark); }
         .detalhes { font-size: 12px; color: var(--text-light); margin-top: 4px; }
 
-        .subtotal-val { font-size: 15px; font-weight: 700; color: var(--primary); margin-right: 5px; }
+        .subtotal-val { font-size: 15px; font-weight: 700; color: var(--text-dark); margin-right: 5px; }
 
         .btn-acao-item {
-            background: none; border: none; font-size: 18px; padding: 8px; cursor: pointer;
+            background: none; border: none; font-size: 18px; padding: 8px; cursor: pointer; transition: 0.2s; opacity: 0.7;
         }
         .btn-edit { color: var(--edit); }
-        .btn-del { color: #333; }
+        .btn-del { color: var(--text-light); }
+        .btn-acao-item:hover { opacity: 1; transform: scale(1.1); }
 
-        .rodape { padding: 20px; background: #0A0A0A; border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 10px; }
+        .rodape { padding: 20px; background: var(--bg-color); border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 10px; }
 
         .btn-salvar {
-            background: var(--success); color: #000; border: none;
+            background: var(--success); color: #FFFFFF; border: none;
             padding: 15px; border-radius: 12px; font-weight: 800;
-            font-size: 15px; cursor: pointer; text-transform: uppercase;
+            font-size: 15px; cursor: pointer; text-transform: uppercase; transition: 0.3s;
         }
+        .btn-salvar:hover { opacity: 0.9; }
 
-        .historico-section { padding: 20px; background: #000; border-top: 4px solid var(--primary); }
+        /* Estilo Histórico - Fundo Claro */
+        .historico-section { padding: 20px; background: var(--card-bg); border-top: 4px solid var(--primary); }
         .historico-titulo { font-size: 14px; font-weight: 800; color: var(--primary); text-transform: uppercase; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
-        .card-historico { background: #0A0A0A; border: 1px solid var(--border); border-radius: 15px; padding: 15px; margin-bottom: 15px; }
+        .card-historico { background: #FFFFFF; border: 1px solid var(--border); border-radius: 15px; padding: 15px; margin-bottom: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
+        .hist-nome-lista { color: var(--text-dark); font-size: 15px; font-weight: 700; display: block; margin-bottom: 5px; }
+        .hist-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
         .hist-total { font-size: 16px; font-weight: 800; color: var(--success); }
-        .btn-hist { flex: 1; padding: 8px; border-radius: 8px; border: none; font-size: 12px; font-weight: 700; cursor: pointer; }
+        .hist-acoes { display: flex; gap: 10px; border-top: 1px solid var(--border); padding-top: 10px; }
+        .btn-hist { flex: 1; padding: 8px; border-radius: 8px; border: none; font-size: 12px; font-weight: 700; cursor: pointer; transition: 0.2s; }
+        .btn-view { background: var(--card-bg); color: var(--text-dark); border: 1px solid var(--border); }
+        .btn-view:hover { background: #EEEEEE; }
 
-        #modal-itens { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 1000; padding: 20px; justify-content: center; align-items: center; }
-        .modal-content { background: #0A0A0A; width: 100%; max-width: 400px; border-radius: 20px; padding: 20px; border: 1px solid var(--primary); max-height: 80vh; overflow-y: auto; }
+        #modal-itens { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; padding: 20px; justify-content: center; align-items: center; backdrop-filter: blur(2px); }
+        .modal-content { background: #FFFFFF; width: 100%; max-width: 400px; border-radius: 20px; padding: 25px; border: 1px solid var(--border); max-height: 80vh; overflow-y: auto; box-shadow: 0 20px 50px rgba(0,0,0,0.1); }
     </style>
 </head>
 <body>
 
     <div class="app-container">
         <div class="header">
-            <h1 style="font-size: 12px; letter-spacing: 3px; color: #444;">COMPRAS</h1>
+            <h1 style="font-size: 12px; letter-spacing: 3px; color: var(--text-light);">SEU PACHECO GESTÃO</h1>
             <div class="total-container">
                 <span class="total-label">Subtotal da Compra</span>
                 <span class="total-value" id="total-geral">R$ 0,00</span>
             </div>
         </div>
         
-        <input type="text" id="nome-lista-atual" placeholder="Digite aqui o titulo Ex: Compras de Quarta">
+        <input type="text" id="nome-lista-atual" placeholder="Título da Lista (Ex: Compras de Quarta)">
 
         <div class="section-title">1. Planejamento (O que falta?)</div>
         <div class="planning-box">
-            <textarea id="rascunho-texto" placeholder="Digite os itens da lista:"></textarea>
+            <textarea id="rascunho-texto" placeholder="Arroz&#10;Feijão&#10;Carne"></textarea>
             <button class="btn-importar" onclick="importarDoRascunho()">
-                <i class="fas fa-magic"></i> Gerar Checklist
+                <i class="fas fa-magic"></i> Transformar em Checklist
             </button>
         </div>
 
@@ -192,7 +203,7 @@
             <input type="text" id="nome-item" placeholder="Produto">
             <div class="inputs-row">
                 <input type="number" id="qtd-item" placeholder="Qtd">
-                <input type="number" step="0.01" id="peso-item" placeholder="Kg">
+                <input type="number" step="0.01" id="peso-item" placeholder="Kg/L">
                 <input type="number" step="0.01" id="preco-item" placeholder="R$ Unit.">
             </div>
             <button class="btn-adicionar" id="btn-add-main" onclick="adicionarItem()">Adicionar Item</button>
@@ -214,16 +225,17 @@
 
     <div id="modal-itens">
         <div class="modal-content">
-            <h2 id="modal-titulo-lista" style="color: var(--primary); font-size: 18px; margin-bottom: 20px;"></h2>
+            <h2 id="modal-titulo-lista" style="color: var(--primary); font-size: 19px; margin-bottom: 20px; font-weight: 700;"></h2>
             <ul id="modal-lista-itens" style="list-style: none;"></ul>
-            <button onclick="fecharModal()" style="width: 100%; margin-top: 20px; padding: 12px; background: var(--primary); border: none; border-radius: 12px; font-weight: 800;">Fechar</button>
+            <button onclick="fecharModal()" style="width: 100%; margin-top: 25px; padding: 14px; background: var(--primary); color: #FFFFFF; border: none; border-radius: 12px; font-weight: 800; text-transform: uppercase; cursor: pointer;">Fechar</button>
         </div>
     </div>
 
     <script>
-        let compras = JSON.parse(localStorage.getItem('comprasPachecoV12')) || [];
-        let historico = JSON.parse(localStorage.getItem('historicoPachecoV12')) || [];
-        let indexSendoEditado = -1; // -1 significa que não estamos editando nada
+        // Mantive a lógica original exata, apenas atualizando os nomes das chaves do localStorage para esta versão
+        let compras = JSON.parse(localStorage.getItem('comprasPachecoWhite')) || [];
+        let historico = JSON.parse(localStorage.getItem('historicoPachecoWhite')) || [];
+        let indexSendoEditado = -1;
 
         function formatarMoeda(v) { return v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }); }
 
@@ -264,21 +276,16 @@
             renderizarHistorico();
         }
 
-        // NOVO: Entra no modo de edição sem apagar o item da lista
         function iniciarEdicao(index) {
             indexSendoEditado = index;
             const item = compras[index];
-            
             document.getElementById('nome-item').value = item.nome;
             document.getElementById('qtd-item').value = item.qtd;
             document.getElementById('peso-item').value = item.peso;
             document.getElementById('preco-item').value = item.preco;
-            
-            // Muda o visual do botão
             const btn = document.getElementById('btn-add-main');
             btn.innerText = "Atualizar Item";
             btn.classList.add('modo-edicao');
-            
             document.getElementById('ancora-input').scrollIntoView({ behavior: 'smooth' });
             renderizarLista();
         }
@@ -288,9 +295,7 @@
             const q = document.getElementById('qtd-item');
             const p = document.getElementById('peso-item'); 
             const v = document.getElementById('preco-item');
-
             if (!n.value.trim()) return alert("Digite o nome do produto!");
-
             const dadosItem = { 
                 nome: n.value.trim(), 
                 qtd: q.value || 1, 
@@ -298,19 +303,15 @@
                 preco: v.value.replace(',', '.') || 0, 
                 comprado: indexSendoEditado !== -1 ? compras[indexSendoEditado].comprado : false 
             };
-
             if (indexSendoEditado !== -1) {
-                // Modo Edição: Sobrescreve o item existente
                 compras[indexSendoEditado] = dadosItem;
-                indexSendoEditado = -1; // Sai do modo edição
+                indexSendoEditado = -1;
                 const btn = document.getElementById('btn-add-main');
                 btn.innerText = "Adicionar Item";
                 btn.classList.remove('modo-edicao');
             } else {
-                // Modo Normal: Adiciona um novo
                 compras.unshift(dadosItem);
             }
-            
             n.value = ''; q.value = ''; p.value = ''; v.value = '';
             salvarDados();
         }
@@ -337,7 +338,7 @@
             });
             compras = [];
             document.getElementById('nome-lista-atual').value = '';
-            localStorage.setItem('historicoPachecoV12', JSON.stringify(historico));
+            localStorage.setItem('historicoPachecoWhite', JSON.stringify(historico));
             salvarDados();
         }
 
@@ -350,12 +351,12 @@
                 div.innerHTML = `
                     <span class="hist-nome-lista">${compra.titulo}</span>
                     <div class="hist-header">
-                        <span style="font-size:10px; color:#444;">${compra.data}</span>
+                        <span style="font-size:10px; color: var(--text-light);">${compra.data}</span>
                         <span class="hist-total">${formatarMoeda(compra.total)}</span>
                     </div>
                     <div class="hist-acoes">
                         <button class="btn-hist btn-view" onclick="verDetalhes(${compra.id})">Ver Itens</button>
-                        <button class="btn-hist btn-del-hist" onclick="excluirHistorico(${compra.id})" style="background:rgba(255,71,87,0.1); color:var(--delete); border:none;">Apagar</button>
+                        <button class="btn-hist btn-del-hist" onclick="excluirHistorico(${compra.id})" style="background: rgba(239, 68, 68, 0.05); color: var(--delete); border: 1px solid rgba(239, 68, 68, 0.1);">Apagar</button>
                     </div>
                 `;
                 container.appendChild(div);
@@ -369,9 +370,9 @@
             listaModal.innerHTML = '';
             compra.itens.forEach(it => {
                 const sub = (parseFloat(it.peso)||0) > 0 ? (it.qtd*it.peso*it.preco) : (it.qtd*it.preco);
-                listaModal.innerHTML += `<li style="padding: 10px 0; border-bottom: 1px solid #1a1a1a; display:flex; justify-content:space-between;">
-                    <span>${it.qtd}x ${it.nome} ${it.peso > 0 ? '('+it.peso+'kg)' : ''}</span>
-                    <span style="color:var(--primary)">${formatarMoeda(sub)}</span>
+                listaModal.innerHTML += `<li style="padding: 12px 0; border-bottom: 1px solid var(--border); display:flex; justify-content:space-between; align-items:center;">
+                    <span style="color: var(--text-dark); font-size: 14px;">${it.qtd}x ${it.nome} ${it.peso > 0 ? '('+it.peso+'kg)' : ''}</span>
+                    <span style="color:var(--primary); font-weight:700; font-size: 14px;">${formatarMoeda(sub)}</span>
                 </li>`;
             });
             document.getElementById('modal-itens').style.display = 'flex';
@@ -379,9 +380,9 @@
 
         function fecharModal() { document.getElementById('modal-itens').style.display = 'none'; }
         function removerItem(i) { if(confirm("Remover este item?")) { compras.splice(i, 1); if(indexSendoEditado===i) indexSendoEditado=-1; salvarDados(); } }
-        function excluirHistorico(id) { if(confirm("Apagar histórico?")){ historico = historico.filter(h => h.id !== id); localStorage.setItem('historicoPachecoV12', JSON.stringify(historico)); renderizarHistorico(); } }
+        function excluirHistorico(id) { if(confirm("Apagar histórico?")){ historico = historico.filter(h => h.id !== id); localStorage.setItem('historicoPachecoWhite', JSON.stringify(historico)); renderizarHistorico(); } }
         function alternarComprado(i) { compras[i].comprado = !compras[i].comprado; salvarDados(); }
-        function salvarDados() { localStorage.setItem('comprasPachecoV12', JSON.stringify(compras)); renderizarLista(); }
+        function salvarDados() { localStorage.setItem('comprasPachecoWhite', JSON.stringify(compras)); renderizarLista(); }
 
         renderizarLista();
     </script>
