@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Teste</title>
+    <title>Gestão Seu Pacheco - Estoque e Compras</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -23,7 +23,6 @@
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
         
-        /* CORREÇÃO AQUI: min-height em vez de height trava */
         html, body { 
             overflow-x: hidden; 
             width: 100%; 
@@ -39,7 +38,6 @@
             padding: 10px;
         }
 
-        /* O container agora cresce livremente para baixo */
         .app-container {
             background: var(--bg-color);
             width: 100%;
@@ -50,7 +48,7 @@
             flex-direction: column;
             border: 1px solid var(--border);
             margin-bottom: 50px;
-            height: fit-content;
+            height: auto; 
         }
 
         .header {
@@ -70,20 +68,42 @@
             letter-spacing: 1px; padding: 15px 20px 5px; font-weight: 700;
         }
 
-        .planning-box { padding: 10px 20px; background: var(--card-bg); display: flex; flex-direction: column; gap: 10px; border-bottom: 1px solid var(--border); }
-
-        textarea {
-            width: 100%; height: 80px; background: #FFFFFF; border: 1px solid var(--border);
-            border-radius: 12px; color: var(--text-dark); padding: 12px; font-family: 'Inter', sans-serif;
-            font-size: 14px; outline: none; resize: none; transition: 0.3s;
+        /* NOVO ESTILO: CHECKLIST DE ESTOQUE */
+        .planning-box { padding: 15px 20px; background: var(--card-bg); display: flex; flex-direction: column; gap: 12px; border-bottom: 1px solid var(--border); }
+        
+        .estoque-lista-container {
+            display: flex; flex-direction: column; gap: 8px;
+            max-height: 250px; overflow-y: auto; padding-right: 5px;
         }
-        textarea:focus { border-color: var(--primary); }
+
+        .item-estoque-row {
+            display: flex; justify-content: space-between; align-items: center;
+            background: #FFFFFF; padding: 10px 12px; border-radius: 12px; border: 1px solid var(--border);
+        }
+
+        .item-estoque-nome { font-weight: 600; color: var(--text-dark); flex: 1; font-size: 14px; }
+        
+        .item-estoque-input {
+            width: 70px; padding: 8px; border: 1px solid var(--border); border-radius: 8px;
+            text-align: center; font-size: 14px; outline: none; background: var(--card-bg);
+            transition: 0.3s;
+        }
+        .item-estoque-input:focus { border-color: var(--primary); background: #FFF; }
+
+        .btn-del-padrao { background: none; border: none; color: #CCC; padding: 8px; cursor: pointer; margin-left: 5px; transition: 0.2s; }
+        .btn-del-padrao:hover { color: var(--delete); }
+
+        .add-padrao-row { display: flex; gap: 8px; margin-top: 5px; }
+        .add-padrao-row input { flex: 1; }
 
         .btn-importar {
             background: rgba(245, 166, 35, 0.1); color: var(--primary);
-            border: 1px solid var(--primary); padding: 12px; border-radius: 10px;
-            font-size: 12px; font-weight: 700; cursor: pointer; text-transform: uppercase;
+            border: 1px solid var(--primary); padding: 15px; border-radius: 12px;
+            font-size: 13px; font-weight: 800; cursor: pointer; text-transform: uppercase; transition: 0.3s;
         }
+        .btn-importar:active { background: rgba(245, 166, 35, 0.2); transform: scale(0.98); }
+
+        /* FIM ESTILO ESTOQUE */
 
         .input-group {
             padding: 10px 20px 20px; background: var(--bg-color);
@@ -110,12 +130,9 @@
             padding: 16px; border-radius: 12px; font-size: 14px; font-weight: 800;
             cursor: pointer; text-transform: uppercase; transition: 0.3s;
         }
-        .btn-adicionar:hover { background: var(--primary-hover); }
-
         .btn-adicionar.modo-edicao { background: var(--edit); }
 
-        /* CORREÇÃO AQUI: Lista livre para crescer */
-        .lista-compras { list-style: none; padding: 10px 20px; background: #FFFFFF; flex: 1; }
+        .lista-compras { list-style: none; padding: 10px 20px; background: #FFFFFF; min-height: 50px; }
 
         .item-compra {
             display: flex; align-items: center; justify-content: space-between;
@@ -147,7 +164,6 @@
             text-decoration: line-through; color: var(--text-light);
         }
 
-        /* CORREÇÃO AQUI: Texto quebra linha em vez de sumir */
         .item-textos { display: flex; flex-direction: column; flex: 1; word-break: break-word; }
         .nome { font-size: 16px; font-weight: 600; color: var(--text-dark); }
         .detalhes { font-size: 12px; color: var(--text-light); margin-top: 4px; }
@@ -160,7 +176,6 @@
         }
         .btn-edit { color: var(--edit); }
         .btn-del { color: var(--text-light); }
-        .btn-acao-item:hover { opacity: 1; transform: scale(1.1); }
 
         .rodape { padding: 20px; background: var(--bg-color); border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 10px; }
 
@@ -169,7 +184,6 @@
             padding: 15px; border-radius: 12px; font-weight: 800;
             font-size: 15px; cursor: pointer; text-transform: uppercase; transition: 0.3s;
         }
-        .btn-salvar:hover { opacity: 0.9; }
 
         .historico-section { padding: 20px; background: var(--card-bg); border-top: 4px solid var(--primary); border-radius: 0 0 24px 24px; }
         .historico-titulo { font-size: 14px; font-weight: 800; color: var(--primary); text-transform: uppercase; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
@@ -180,7 +194,6 @@
         .hist-acoes { display: flex; gap: 10px; border-top: 1px solid var(--border); padding-top: 10px; }
         .btn-hist { flex: 1; padding: 8px; border-radius: 8px; border: none; font-size: 12px; font-weight: 700; cursor: pointer; transition: 0.2s; }
         .btn-view { background: var(--card-bg); color: var(--text-dark); border: 1px solid var(--border); }
-        .btn-view:hover { background: #EEEEEE; }
         .btn-del-hist { background: rgba(239, 68, 68, 0.05); color: var(--delete); border: 1px solid rgba(239, 68, 68, 0.1); }
 
         #modal-itens { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; padding: 20px; justify-content: center; align-items: center; backdrop-filter: blur(2px); }
@@ -191,7 +204,7 @@
 
     <div class="app-container">
         <div class="header">
-            <h1 style="font-size: 12px; letter-spacing: 3px; color: var(--text-light);">COMPRAS</h1>
+            <h1 style="font-size: 12px; letter-spacing: 3px; color: var(--text-light);">SEU PACHECO GESTÃO</h1>
             <div class="total-container">
                 <span class="total-label">Subtotal da Compra</span>
                 <span class="total-value" id="total-geral">R$ 0,00</span>
@@ -200,21 +213,35 @@
         
         <input type="text" id="nome-lista-atual" placeholder="Título da Lista (Ex: Compras de Quarta)">
 
-        <div class="section-title">1. Planejamento (O que falta?)</div>
+        <div class="section-title">1. Checagem de Estoque Fixo</div>
         <div class="planning-box">
-            <textarea id="rascunho-texto" placeholder="Arroz&#10;Feijão&#10;Carne"></textarea>
-            <button class="btn-importar" onclick="importarDoRascunho()">
-                <i class="fas fa-magic"></i> Transformar em Checklist
+            
+            <p style="font-size: 12px; color: var(--text-light); margin-bottom: 5px;">
+                Dica: Preencha apenas a quantidade do que está faltando.
+            </p>
+
+            <div class="estoque-lista-container" id="lista-padroes">
+                </div>
+
+            <div class="add-padrao-row">
+                <input type="text" id="novo-item-padrao" placeholder="Adicionar novo item fixo...">
+                <button class="btn-adicionar" style="padding: 14px 20px;" onclick="addNovoPadrao()">
+                    <i class="fas fa-plus"></i>
+                </button>
+            </div>
+
+            <button class="btn-importar" onclick="gerarListaDoEstoque()" style="margin-top: 10px;">
+                <i class="fas fa-arrow-down"></i> Enviar para a Lista de Compras
             </button>
         </div>
 
         <div class="section-title">2. No Mercado (Preços e Pesos)</div>
         <div class="input-group" id="ancora-input">
-            <input type="text" id="nome-item" placeholder="Produto">
+            <input type="text" id="nome-item" placeholder="Adicionar item avulso">
             <div class="inputs-row">
                 <input type="number" id="qtd-item" placeholder="Qtd">
-                <input type="number" step="0.01" id="peso-item" placeholder="Kg">
-                <input type="number" step="0.01" id="preco-item" placeholder="R$ Uni.">
+                <input type="number" step="0.01" id="peso-item" placeholder="Kg/L">
+                <input type="number" step="0.01" id="preco-item" placeholder="R$ Unit.">
             </div>
             <button class="btn-adicionar" id="btn-add-main" onclick="adicionarItem()">Adicionar Item</button>
         </div>
@@ -242,12 +269,84 @@
     </div>
 
     <script>
-        let compras = JSON.parse(localStorage.getItem('comprasPachecoWhiteV2')) || [];
-        let historico = JSON.parse(localStorage.getItem('historicoPachecoWhiteV2')) || [];
+        let compras = JSON.parse(localStorage.getItem('comprasPachecoV5')) || [];
+        let historico = JSON.parse(localStorage.getItem('historicoPachecoV5')) || [];
+        
+        // Itens Padrões de Estoque da Aline
+        let itensPadrao = JSON.parse(localStorage.getItem('padroesPacheco')) || [
+            'Arroz', 'Feijão', 'Óleo', 'Limão', 'Cebola', 'Alho', 'Detergente'
+        ];
+        
         let indexSendoEditado = -1;
 
         function formatarMoeda(v) { return v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }); }
 
+        // RENDERIZA A LISTA DE ESTOQUE
+        function renderizarPadroes() {
+            const container = document.getElementById('lista-padroes');
+            container.innerHTML = '';
+            itensPadrao.forEach((item, i) => {
+                container.innerHTML += `
+                    <div class="item-estoque-row">
+                        <span class="item-estoque-nome">${item}</span>
+                        <div style="display:flex; align-items:center;">
+                            <input type="number" id="qtd-padrao-${i}" class="item-estoque-input" placeholder="Qtd">
+                            <button class="btn-del-padrao" onclick="removerPadrao(${i})" title="Remover da lista fixa"><i class="fas fa-times"></i></button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function addNovoPadrao() {
+            const val = document.getElementById('novo-item-padrao').value.trim();
+            if (val) {
+                itensPadrao.push(val);
+                localStorage.setItem('padroesPacheco', JSON.stringify(itensPadrao));
+                document.getElementById('novo-item-padrao').value = '';
+                renderizarPadroes();
+            }
+        }
+
+        function removerPadrao(i) {
+            if(confirm("Remover este item dos fixos?")) {
+                itensPadrao.splice(i, 1);
+                localStorage.setItem('padroesPacheco', JSON.stringify(itensPadrao));
+                renderizarPadroes();
+            }
+        }
+
+        // PEGA AS QUANTIDADES E GERA A LISTA DE COMPRAS
+        function gerarListaDoEstoque() {
+            let itensAdicionados = 0;
+            
+            // Lemos de trás pra frente para entrar na ordem certa na lista de baixo
+            for (let i = itensPadrao.length - 1; i >= 0; i--) {
+                let input = document.getElementById(`qtd-padrao-${i}`);
+                let qtd = parseFloat(input.value);
+                
+                if (qtd > 0) {
+                    compras.unshift({ 
+                        nome: itensPadrao[i], 
+                        qtd: qtd, 
+                        peso: "", 
+                        preco: 0, 
+                        comprado: false 
+                    });
+                    input.value = ''; // Limpa o campo depois de enviar
+                    itensAdicionados++;
+                }
+            }
+
+            if (itensAdicionados > 0) {
+                salvarDados();
+                document.getElementById('ancora-input').scrollIntoView({ behavior: 'smooth' });
+            } else {
+                alert("Digite a quantidade de pelo menos um item do estoque para enviar!");
+            }
+        }
+
+        // LISTA DE COMPRAS PRINCIPAL
         function renderizarLista() {
             const lista = document.getElementById('lista');
             const displayTotal = document.getElementById('total-geral');
@@ -331,20 +430,6 @@
             salvarDados();
         }
 
-        function importarDoRascunho() {
-            const texto = document.getElementById('rascunho-texto').value.trim();
-            if (!texto) return;
-            
-            const itensNovos = texto.split('\n').filter(n => n.trim() !== '');
-            
-            itensNovos.reverse().forEach(nome => {
-                compras.unshift({ nome: nome.trim(), qtd: 1, peso: "", preco: 0, comprado: false });
-            });
-            
-            document.getElementById('rascunho-texto').value = '';
-            salvarDados();
-        }
-
         function salvarListaParaHistorico() {
             if (compras.length === 0) return;
             const total = compras.reduce((acc, it) => acc + ((parseFloat(it.peso)||0) > 0 ? (it.qtd*it.peso*it.preco) : (it.qtd*it.preco)), 0);
@@ -357,7 +442,7 @@
             });
             compras = [];
             document.getElementById('nome-lista-atual').value = '';
-            localStorage.setItem('historicoPachecoWhiteV2', JSON.stringify(historico));
+            localStorage.setItem('historicoPachecoV5', JSON.stringify(historico));
             salvarDados();
         }
 
@@ -399,10 +484,16 @@
 
         function fecharModal() { document.getElementById('modal-itens').style.display = 'none'; }
         function removerItem(i) { if(confirm("Remover este item?")) { compras.splice(i, 1); if(indexSendoEditado===i) indexSendoEditado=-1; salvarDados(); } }
-        function excluirHistorico(id) { if(confirm("Apagar histórico?")){ historico = historico.filter(h => h.id !== id); localStorage.setItem('historicoPachecoWhiteV2', JSON.stringify(historico)); renderizarHistorico(); } }
+        function excluirHistorico(id) { if(confirm("Apagar histórico?")){ historico = historico.filter(h => h.id !== id); localStorage.setItem('historicoPachecoV5', JSON.stringify(historico)); renderizarHistorico(); } }
         function alternarComprado(i) { compras[i].comprado = !compras[i].comprado; salvarDados(); }
-        function salvarDados() { localStorage.setItem('comprasPachecoWhiteV2', JSON.stringify(compras)); renderizarLista(); }
+        
+        function salvarDados() { 
+            localStorage.setItem('comprasPachecoV5', JSON.stringify(compras)); 
+            renderizarLista(); 
+        }
 
+        // Inicia a tela
+        renderizarPadroes();
         renderizarLista();
     </script>
 </body>
