@@ -8,25 +8,29 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        :root {
-            --bg-color: #FFFFFF; 
-            --card-bg: #F9FAFB; 
-            --primary: #2e7d32; /* Mudei para o Verde da Gerência */
-            --primary-hover: #1b5e20;
-            --text-dark: #1F2937; 
-            --text-light: #6B7280; 
-            --border: #E5E7EB; 
-            --success: #10B981; 
-            --delete: #EF4444; 
+        /* TRAVA A TELA E EVITA ARRASTE LATERAL */
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
         }
-
-        * { box-sizing: border-box; margin: 0; padding: 0; }
         
         html, body { 
             overflow-x: hidden; 
             width: 100%; 
             min-height: 100vh; 
             background-color: var(--bg-color); 
+        }
+
+        :root {
+            --bg-color: #FFFFFF; 
+            --card-bg: #F9FAFB; 
+            --primary: #2e7d32; 
+            --primary-hover: #1b5e20;
+            --text-dark: #1F2937; 
+            --text-light: #6B7280; 
+            --border: #E5E7EB; 
+            --success: #10B981; 
+            --delete: #EF4444; 
         }
 
         body {
@@ -85,7 +89,7 @@
         
         .estoque-lista-container {
             display: flex; flex-direction: column; gap: 8px;
-            max-height: 50vh; /* Permite ver mais itens na tela */
+            max-height: 50vh;
             overflow-y: auto; padding-right: 5px;
         }
 
@@ -141,9 +145,36 @@
         .btn-view { background: var(--card-bg); color: var(--text-dark); border: 1px solid var(--border); }
         .btn-del-hist { background: rgba(239, 68, 68, 0.05); color: var(--delete); border: 1px solid rgba(239, 68, 68, 0.1); }
 
-        /* MODAL */
-        #modal-itens { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; padding: 20px; justify-content: center; align-items: center; backdrop-filter: blur(3px); }
-        .modal-content { background: #FFFFFF; width: 100%; max-width: 400px; border-radius: 20px; padding: 25px; border: 1px solid var(--border); max-height: 80vh; overflow-y: auto; box-shadow: 0 20px 50px rgba(0,0,0,0.2); }
+        /* MODAIS CUSTOMIZADOS */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0, 0, 0, 0.6); z-index: 1000;
+            opacity: 0; visibility: hidden; transition: all 0.3s ease;
+            display: flex; justify-content: center; align-items: center; backdrop-filter: blur(3px);
+        }
+        .modal-overlay.show { opacity: 1; visibility: visible; }
+        .modal {
+            background-color: white; border-radius: 16px; padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2); z-index: 1001;
+            width: 85%; max-width: 400px; text-align: center;
+            opacity: 0; visibility: hidden; transform: scale(0.8); transition: all 0.3s ease;
+            position: absolute; /* Para ficar centralizado no overlay flex */
+            max-height: 80vh; overflow-y: auto;
+        }
+        .modal.show { opacity: 1; visibility: visible; transform: scale(1); }
+        
+        .modal-header { font-size: 18px; font-weight: bold; margin-bottom: 15px; color: var(--primary); }
+        .modal-body { font-size: 15px; margin-bottom: 25px; line-height: 1.5; color: var(--text-dark); }
+        .modal-footer { display: flex; justify-content: space-around; gap: 10px; }
+        
+        .modal-btn { padding: 12px 20px; border: none; border-radius: 10px; font-size: 14px; font-weight: bold; cursor: pointer; flex-grow: 1; }
+        .modal-btn-ok { background-color: var(--primary); color: white; }
+        .modal-btn-cancel { background-color: var(--card-bg); color: var(--text-dark); border: 1px solid var(--border); }
+        .modal-btn-danger { background-color: var(--delete); color: white; }
+        
+        #modal-confirm .modal-header { color: var(--delete); }
+
+        /* Estilo específico para lista dentro do modal de detalhes */
         .linha-modal { padding: 12px 0; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
         .linha-modal:last-child { border-bottom: none; }
         .qtd-badge { background: var(--primary); color: white; padding: 4px 8px; border-radius: 6px; font-weight: 700; font-size: 14px; min-width: 40px; text-align: center;}
@@ -184,22 +215,37 @@
         </div>
     </div>
 
-    <div id="modal-itens">
-        <div class="modal-content">
+    <div id="modal-overlay" class="modal-overlay" onclick="fecharTodosModais(event)">
+        
+        <div id="modal-alert" class="modal" onclick="event.stopPropagation()">
+            <div class="modal-header" id="modal-alert-header">⚠️ Atenção</div>
+            <div class="modal-body" id="modal-alert-body">Mensagem</div>
+            <div class="modal-footer">
+                <button class="modal-btn modal-btn-ok" onclick="fecharTodosModais()">OK</button>
+            </div>
+        </div>
+
+        <div id="modal-confirm" class="modal" onclick="event.stopPropagation()">
+            <div class="modal-header">⚠️ Confirmação</div>
+            <div class="modal-body" id="modal-confirm-body">Tem certeza?</div>
+            <div class="modal-footer">
+                <button class="modal-btn modal-btn-cancel" onclick="fecharTodosModais()">Cancelar</button>
+                <button class="modal-btn modal-btn-danger" onclick="executarAcaoConfirmada()">Sim, Confirmar</button>
+            </div>
+        </div>
+
+        <div id="modal-itens" class="modal" onclick="event.stopPropagation()">
             <h2 id="modal-titulo-lista" style="color: var(--primary); font-size: 18px; margin-bottom: 5px; font-weight: 800;"></h2>
             <p id="modal-data-lista" style="font-size: 12px; color: var(--text-light); margin-bottom: 20px;"></p>
-            
-            <ul id="modal-lista-itens" style="list-style: none;"></ul>
-            
-            <button onclick="fecharModal()" style="width: 100%; margin-top: 25px; padding: 15px; background: var(--card-bg); color: var(--text-dark); border: 1px solid var(--border); border-radius: 12px; font-weight: 800; text-transform: uppercase; cursor: pointer;">Fechar</button>
+            <ul id="modal-lista-itens" style="list-style: none; text-align: left; padding: 0;"></ul>
+            <button class="modal-btn modal-btn-cancel" style="width: 100%; margin-top: 25px;" onclick="fecharTodosModais()">Fechar</button>
         </div>
+        
     </div>
 
     <script>
         // Banco de dados Local
         let historicoEstoque = JSON.parse(localStorage.getItem('historicoEstoquePacheco')) || [];
-        
-        // Itens Padrões Iniciais (Pode adicionar ou excluir pelo app)
         let itensPadrao = JSON.parse(localStorage.getItem('itensEstoquePacheco')) || [
             'Arroz (Pacote 5kg)', 
             'Feijão (Pacote 1kg)', 
@@ -210,7 +256,41 @@
             'Embalagem Marmita'
         ];
 
-        // RENDERIZA A LISTA DE ESTOQUE NA TELA
+        // --- SISTEMA DE MODAIS ---
+        let acaoPendente = null;
+
+        function fecharTodosModais(event) {
+            // Se o evento foi passado, verifica se clicou no fundo escuro
+            if(event && event.target.id !== 'modal-overlay') return;
+            
+            document.getElementById('modal-overlay').classList.remove('show');
+            document.querySelectorAll('.modal').forEach(m => m.classList.remove('show'));
+            acaoPendente = null;
+        }
+
+        function abrirAlerta(mensagem, titulo = "Aviso") {
+            document.getElementById('modal-alert-header').innerText = titulo;
+            document.getElementById('modal-alert-body').innerText = mensagem;
+            
+            document.getElementById('modal-overlay').classList.add('show');
+            document.getElementById('modal-alert').classList.add('show');
+        }
+
+        function abrirConfirmacao(mensagem, acao) {
+            document.getElementById('modal-confirm-body').innerText = mensagem;
+            acaoPendente = acao;
+            
+            document.getElementById('modal-overlay').classList.add('show');
+            document.getElementById('modal-confirm').classList.add('show');
+        }
+
+        function executarAcaoConfirmada() {
+            if(acaoPendente) acaoPendente();
+            fecharTodosModais();
+        }
+        // ------------------------
+
+        // RENDERIZA A LISTA DE ESTOQUE
         function renderizarPadroes() {
             const container = document.getElementById('lista-padroes');
             container.innerHTML = '';
@@ -233,7 +313,7 @@
             });
         }
 
-        // ADICIONAR NOVO ITEM FIXO
+        // ADICIONAR NOVO ITEM
         function addNovoPadrao() {
             const input = document.getElementById('novo-item-padrao');
             const val = input.value.trim();
@@ -242,7 +322,6 @@
                 localStorage.setItem('itensEstoquePacheco', JSON.stringify(itensPadrao));
                 input.value = '';
                 renderizarPadroes();
-                // Rola para o final da lista para ver o item adicionado
                 const container = document.getElementById('lista-padroes');
                 container.scrollTop = container.scrollHeight;
             }
@@ -250,33 +329,30 @@
 
         // REMOVER ITEM FIXO
         function removerPadrao(i) {
-            if(confirm("Tem certeza que deseja excluir este produto do sistema de estoque?")) {
+            abrirConfirmacao("Tem certeza que deseja excluir este produto do sistema de estoque?", () => {
                 itensPadrao.splice(i, 1);
                 localStorage.setItem('itensEstoquePacheco', JSON.stringify(itensPadrao));
                 renderizarPadroes();
-            }
+            });
         }
 
-        // SALVAR A CONFERÊNCIA DE HOJE
+        // SALVAR A CONFERÊNCIA
         function salvarChecagem() {
-            if(itensPadrao.length === 0) return alert("Não há itens para checar.");
+            if(itensPadrao.length === 0) return abrirAlerta("Não há itens para checar.", "Estoque Vazio");
 
             let itensConferidos = [];
             let titulo = document.getElementById('nome-lista-atual').value.trim();
             
-            // Varre a lista pegando o que foi digitado
             itensPadrao.forEach((item, i) => {
                 let input = document.getElementById(`qtd-padrao-${i}`);
                 let qtd = input.value.trim();
                 
-                // Salva na conferência (Se deixou em branco, salva como 0 ou Vazio, aqui optei por salvar o que ele digitou)
                 itensConferidos.push({
                     nome: item,
                     qtd: qtd === "" ? "-" : qtd
                 });
             });
 
-            // Cria o registro
             let novoRegistro = {
                 id: Date.now(),
                 titulo: titulo || "Checagem de Rotina",
@@ -284,18 +360,16 @@
                 itens: itensConferidos
             };
 
-            // Salva no começo do histórico
             historicoEstoque.unshift(novoRegistro);
             localStorage.setItem('historicoEstoquePacheco', JSON.stringify(historicoEstoque));
 
-            // Limpa a tela para a próxima
             document.getElementById('nome-lista-atual').value = '';
             itensPadrao.forEach((item, i) => {
                 document.getElementById(`qtd-padrao-${i}`).value = '';
             });
 
             renderizarHistorico();
-            alert("✅ Checagem de estoque salva com sucesso!");
+            abrirAlerta("Checagem de estoque salva e arquivada com sucesso!", "✅ Sucesso");
         }
 
         // RENDERIZAR O HISTÓRICO
@@ -325,7 +399,7 @@
             });
         }
 
-        // MODAL DO HISTÓRICO
+        // VER DETALHES DO HISTÓRICO
         function verDetalhes(id) {
             const registro = historicoEstoque.find(h => h.id === id);
             if(!registro) return;
@@ -337,8 +411,6 @@
             listaModal.innerHTML = '';
             
             registro.itens.forEach(it => {
-                // Destaca se a quantidade for um traço (não preenchido)
-                let corQtd = it.qtd === "-" ? "#ccc" : "var(--text-dark)";
                 let bgBadge = it.qtd === "-" ? "#f5f5f5" : "var(--primary)";
                 let txtBadge = it.qtd === "-" ? "#999" : "#fff";
 
@@ -349,19 +421,18 @@
                     </li>
                 `;
             });
-            document.getElementById('modal-itens').style.display = 'flex';
-        }
-
-        function fecharModal() { 
-            document.getElementById('modal-itens').style.display = 'none'; 
+            
+            document.getElementById('modal-overlay').classList.add('show');
+            document.getElementById('modal-itens').classList.add('show');
         }
         
+        // APAGAR DO HISTÓRICO
         function excluirHistorico(id) { 
-            if(confirm("Tem certeza que deseja apagar este relatório do histórico?")) { 
+            abrirConfirmacao("Tem certeza que deseja apagar este relatório do histórico? Esta ação não pode ser desfeita.", () => {
                 historicoEstoque = historicoEstoque.filter(h => h.id !== id); 
                 localStorage.setItem('historicoEstoquePacheco', JSON.stringify(historicoEstoque)); 
                 renderizarHistorico(); 
-            } 
+            });
         }
 
         // Inicia a tela
