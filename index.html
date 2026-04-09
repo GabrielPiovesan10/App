@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Estoque e Compras</title>
+    <title>Checagem de Estoque</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -11,14 +11,13 @@
         :root {
             --bg-color: #FFFFFF; 
             --card-bg: #F9FAFB; 
-            --primary: #F5A623; 
-            --primary-hover: #E59415;
+            --primary: #2e7d32; /* Mudei para o Verde da Gerência */
+            --primary-hover: #1b5e20;
             --text-dark: #1F2937; 
             --text-light: #6B7280; 
             --border: #E5E7EB; 
             --success: #10B981; 
             --delete: #EF4444; 
-            --edit: #3B82F6; 
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -48,7 +47,6 @@
             flex-direction: column;
             border: 1px solid var(--border);
             margin-bottom: 50px;
-            height: auto; 
         }
 
         .header {
@@ -59,442 +57,316 @@
             border-radius: 24px 24px 0 0;
         }
 
-        .total-container { margin-top: 15px; }
-        .total-label { font-size: 11px; color: var(--text-light); text-transform: uppercase; letter-spacing: 2px; }
-        .total-value { font-size: 32px; font-weight: 800; color: var(--text-dark); display: block; }
+        .header h1 {
+            font-size: 16px; 
+            letter-spacing: 2px; 
+            color: var(--primary);
+            margin: 0;
+        }
+
+        #nome-lista-atual {
+            width: 100%; background: transparent; border: none; border-bottom: 1px solid var(--border);
+            color: var(--text-dark); font-weight: 700; font-size: 16px; padding: 15px 20px; outline: none; text-align: center;
+        }
+        #nome-lista-atual::placeholder { color: #A0AEC0; font-weight: 400; }
 
         .section-title {
-            font-size: 11px; color: var(--primary); text-transform: uppercase;
+            font-size: 11px; color: var(--text-light); text-transform: uppercase;
             letter-spacing: 1px; padding: 15px 20px 5px; font-weight: 700;
         }
 
-        /* NOVO ESTILO: CHECKLIST DE ESTOQUE */
-        .planning-box { padding: 15px 20px; background: var(--card-bg); display: flex; flex-direction: column; gap: 12px; border-bottom: 1px solid var(--border); }
+        .planning-box { 
+            padding: 10px 20px 20px; 
+            background: var(--bg-color); 
+            display: flex; 
+            flex-direction: column; 
+            gap: 12px; 
+        }
         
         .estoque-lista-container {
             display: flex; flex-direction: column; gap: 8px;
-            max-height: 250px; overflow-y: auto; padding-right: 5px;
+            max-height: 50vh; /* Permite ver mais itens na tela */
+            overflow-y: auto; padding-right: 5px;
         }
 
         .item-estoque-row {
             display: flex; justify-content: space-between; align-items: center;
-            background: #FFFFFF; padding: 10px 12px; border-radius: 12px; border: 1px solid var(--border);
+            background: var(--card-bg); padding: 10px 12px; border-radius: 12px; border: 1px solid var(--border);
         }
 
-        .item-estoque-nome { font-weight: 600; color: var(--text-dark); flex: 1; font-size: 14px; }
+        .item-estoque-nome { font-weight: 600; color: var(--text-dark); flex: 1; font-size: 15px; }
         
         .item-estoque-input {
-            width: 70px; padding: 8px; border: 1px solid var(--border); border-radius: 8px;
-            text-align: center; font-size: 14px; outline: none; background: var(--card-bg);
-            transition: 0.3s;
+            width: 80px; padding: 10px; border: 1px solid var(--border); border-radius: 8px;
+            text-align: center; font-size: 15px; outline: none; background: #FFF;
+            transition: 0.3s; font-weight: 600;
         }
-        .item-estoque-input:focus { border-color: var(--primary); background: #FFF; }
+        .item-estoque-input:focus { border-color: var(--primary); box-shadow: 0 0 0 2px rgba(46, 125, 50, 0.2); }
 
-        .btn-del-padrao { background: none; border: none; color: #CCC; padding: 8px; cursor: pointer; margin-left: 5px; transition: 0.2s; }
+        .btn-del-padrao { background: none; border: none; color: #CCC; padding: 8px; cursor: pointer; margin-left: 5px; transition: 0.2s; font-size: 16px;}
         .btn-del-padrao:hover { color: var(--delete); }
 
-        .add-padrao-row { display: flex; gap: 8px; margin-top: 5px; }
-        .add-padrao-row input { flex: 1; }
-
-        .btn-importar {
-            background: rgba(245, 166, 35, 0.1); color: var(--primary);
-            border: 1px solid var(--primary); padding: 15px; border-radius: 12px;
-            font-size: 13px; font-weight: 800; cursor: pointer; text-transform: uppercase; transition: 0.3s;
+        .add-padrao-row { display: flex; gap: 8px; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border);}
+        .add-padrao-row input { 
+            flex: 1; padding: 14px; border: 1px solid var(--border); border-radius: 12px;
+            font-size: 15px; outline: none; background: var(--card-bg); color: var(--text-dark);
         }
-        .btn-importar:active { background: rgba(245, 166, 35, 0.2); transform: scale(0.98); }
-
-        /* FIM ESTILO ESTOQUE */
-
-        .input-group {
-            padding: 10px 20px 20px; background: var(--bg-color);
-            border-bottom: 1px solid var(--border); display: flex; flex-direction: column; gap: 10px;
-        }
-
-        .inputs-row { display: flex; gap: 8px; width: 100%; }
-
-        input {
-            padding: 14px; border: 1px solid var(--border); border-radius: 12px;
-            font-size: 15px; outline: none; background: var(--card-bg); color: var(--text-dark); min-width: 0;
-            transition: 0.3s;
-        }
-        
-        input:focus { border-color: var(--primary); background: #FFFFFF; }
-
-        #nome-lista-atual {
-            width: 100%; background: transparent; border: none; border-bottom: 1px solid var(--border);
-            color: var(--primary); font-weight: 700; font-size: 16px; padding: 10px 20px; outline: none; text-align: center;
-        }
+        .add-padrao-row input:focus { border-color: var(--primary); background: #FFF; }
 
         .btn-adicionar {
             background: var(--primary); color: #FFFFFF; border: none;
-            padding: 16px; border-radius: 12px; font-size: 14px; font-weight: 800;
-            cursor: pointer; text-transform: uppercase; transition: 0.3s;
+            padding: 14px 20px; border-radius: 12px; font-size: 14px; font-weight: 800;
+            cursor: pointer; transition: 0.3s;
         }
-        .btn-adicionar.modo-edicao { background: var(--edit); }
-
-        .lista-compras { list-style: none; padding: 10px 20px; background: #FFFFFF; min-height: 50px; }
-
-        .item-compra {
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 18px 0; border-bottom: 1px solid var(--border);
-            transition: background 0.3s;
-        }
-
-        .item-compra.editando {
-            background: rgba(59, 130, 246, 0.05);
-            border-left: 4px solid var(--edit);
-            padding-left: 10px;
-        }
-
-        .item-info { display: flex; align-items: center; gap: 12px; flex: 1; cursor: pointer; }
-
-        .checkbox-custom {
-            width: 26px; height: 26px; min-width: 26px; border: 2px solid var(--border);
-            border-radius: 8px; display: flex; justify-content: center; align-items: center;
-            color: transparent; background: var(--card-bg); transition: 0.2s;
-            flex-shrink: 0;
-        }
-
-        .item-compra.comprado .checkbox-custom { background: var(--success); border-color: var(--success); color: #FFFFFF; }
-        .item-compra.comprado .checkbox-custom i { display: block; }
-
-        .item-compra.comprado .nome, 
-        .item-compra.comprado .detalhes, 
-        .item-compra.comprado .subtotal-val {
-            text-decoration: line-through; color: var(--text-light);
-        }
-
-        .item-textos { display: flex; flex-direction: column; flex: 1; word-break: break-word; }
-        .nome { font-size: 16px; font-weight: 600; color: var(--text-dark); }
-        .detalhes { font-size: 12px; color: var(--text-light); margin-top: 4px; }
-
-        .acoes-container { display: flex; align-items: center; flex-shrink: 0; gap: 5px; }
-        .subtotal-val { font-size: 15px; font-weight: 700; color: var(--text-dark); margin-right: 5px; }
-
-        .btn-acao-item {
-            background: none; border: none; font-size: 18px; padding: 8px; cursor: pointer; transition: 0.2s; opacity: 0.7;
-        }
-        .btn-edit { color: var(--edit); }
-        .btn-del { color: var(--text-light); }
+        .btn-adicionar:active { transform: scale(0.95); }
 
         .rodape { padding: 20px; background: var(--bg-color); border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 10px; }
 
         .btn-salvar {
             background: var(--success); color: #FFFFFF; border: none;
-            padding: 15px; border-radius: 12px; font-weight: 800;
+            padding: 16px; border-radius: 12px; font-weight: 800;
             font-size: 15px; cursor: pointer; text-transform: uppercase; transition: 0.3s;
+            display: flex; justify-content: center; align-items: center; gap: 10px;
         }
+        .btn-salvar:active { transform: scale(0.98); }
 
+        /* HISTÓRICO */
         .historico-section { padding: 20px; background: var(--card-bg); border-top: 4px solid var(--primary); border-radius: 0 0 24px 24px; }
         .historico-titulo { font-size: 14px; font-weight: 800; color: var(--primary); text-transform: uppercase; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
         .card-historico { background: #FFFFFF; border: 1px solid var(--border); border-radius: 15px; padding: 15px; margin-bottom: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
         .hist-nome-lista { color: var(--text-dark); font-size: 15px; font-weight: 700; display: block; margin-bottom: 5px; }
         .hist-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-        .hist-total { font-size: 16px; font-weight: 800; color: var(--success); }
         .hist-acoes { display: flex; gap: 10px; border-top: 1px solid var(--border); padding-top: 10px; }
-        .btn-hist { flex: 1; padding: 8px; border-radius: 8px; border: none; font-size: 12px; font-weight: 700; cursor: pointer; transition: 0.2s; }
+        .btn-hist { flex: 1; padding: 10px; border-radius: 8px; border: none; font-size: 13px; font-weight: 700; cursor: pointer; transition: 0.2s; }
         .btn-view { background: var(--card-bg); color: var(--text-dark); border: 1px solid var(--border); }
         .btn-del-hist { background: rgba(239, 68, 68, 0.05); color: var(--delete); border: 1px solid rgba(239, 68, 68, 0.1); }
 
-        #modal-itens { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; padding: 20px; justify-content: center; align-items: center; backdrop-filter: blur(2px); }
-        .modal-content { background: #FFFFFF; width: 100%; max-width: 400px; border-radius: 20px; padding: 25px; border: 1px solid var(--border); max-height: 80vh; overflow-y: auto; box-shadow: 0 20px 50px rgba(0,0,0,0.1); }
+        /* MODAL */
+        #modal-itens { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; padding: 20px; justify-content: center; align-items: center; backdrop-filter: blur(3px); }
+        .modal-content { background: #FFFFFF; width: 100%; max-width: 400px; border-radius: 20px; padding: 25px; border: 1px solid var(--border); max-height: 80vh; overflow-y: auto; box-shadow: 0 20px 50px rgba(0,0,0,0.2); }
+        .linha-modal { padding: 12px 0; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+        .linha-modal:last-child { border-bottom: none; }
+        .qtd-badge { background: var(--primary); color: white; padding: 4px 8px; border-radius: 6px; font-weight: 700; font-size: 14px; min-width: 40px; text-align: center;}
     </style>
 </head>
 <body>
 
     <div class="app-container">
         <div class="header">
-            <h1 style="font-size: 12px; letter-spacing: 3px; color: var(--text-light);">ESTOQUE E COMPRA</h1>
-            <div class="total-container">
-                <span class="total-label">Subtotal da Compra</span>
-                <span class="total-value" id="total-geral">R$ 0,00</span>
-            </div>
+            <h1><i class="fas fa-boxes"></i> CONTROLE DE ESTOQUE</h1>
         </div>
         
-        <input type="text" id="nome-lista-atual" placeholder="Título da Lista (Ex: Compras de Quarta)">
+        <input type="text" id="nome-lista-atual" placeholder="Título (Ex: Conferência Matinal)">
 
-        <div class="section-title">1. Checagem de Estoque Fixo</div>
+        <div class="section-title">Lista Fixa de Produtos</div>
         <div class="planning-box">
             
-            <p style="font-size: 12px; color: var(--text-light); margin-bottom: 5px;">
-                Dica: Preencha apenas a quantidade do que está faltando.
-            </p>
-
             <div class="estoque-lista-container" id="lista-padroes">
                 </div>
 
             <div class="add-padrao-row">
-                <input type="text" id="novo-item-padrao" placeholder="Adicionar novo item fixo...">
-                <button class="btn-adicionar" style="padding: 14px 20px;" onclick="addNovoPadrao()">
+                <input type="text" id="novo-item-padrao" placeholder="Adicionar novo produto ao estoque...">
+                <button class="btn-adicionar" onclick="addNovoPadrao()">
                     <i class="fas fa-plus"></i>
                 </button>
             </div>
-
-            <button class="btn-importar" onclick="gerarListaDoEstoque()" style="margin-top: 10px;">
-                <i class="fas fa-arrow-down"></i> Enviar para a Lista de Compras
-            </button>
         </div>
-
-        <div class="section-title">2. No Mercado (Preços e Pesos)</div>
-        <div class="input-group" id="ancora-input">
-            <input type="text" id="nome-item" placeholder="Adicionar item avulso">
-            <div class="inputs-row">
-                <input type="number" id="qtd-item" placeholder="Qtd">
-                <input type="number" step="0.01" id="peso-item" placeholder="Kg/L">
-                <input type="number" step="0.01" id="preco-item" placeholder="R$ Unit.">
-            </div>
-            <button class="btn-adicionar" id="btn-add-main" onclick="adicionarItem()">Adicionar Item</button>
-        </div>
-
-        <ul class="lista-compras" id="lista"></ul>
 
         <div class="rodape">
-            <button class="btn-salvar" onclick="salvarListaParaHistorico()">
-                <i class="fas fa-check-double"></i> Finalizar e Arquivar
+            <button class="btn-salvar" onclick="salvarChecagem()">
+                <i class="fas fa-save"></i> Salvar Checagem
             </button>
         </div>
 
         <div class="historico-section">
-            <div class="historico-titulo"><i class="fas fa-history"></i> Histórico</div>
+            <div class="historico-titulo"><i class="fas fa-history"></i> Histórico de Checagens</div>
             <div id="historico-lista"></div>
         </div>
     </div>
 
     <div id="modal-itens">
         <div class="modal-content">
-            <h2 id="modal-titulo-lista" style="color: var(--primary); font-size: 19px; margin-bottom: 20px; font-weight: 700;"></h2>
+            <h2 id="modal-titulo-lista" style="color: var(--primary); font-size: 18px; margin-bottom: 5px; font-weight: 800;"></h2>
+            <p id="modal-data-lista" style="font-size: 12px; color: var(--text-light); margin-bottom: 20px;"></p>
+            
             <ul id="modal-lista-itens" style="list-style: none;"></ul>
-            <button onclick="fecharModal()" style="width: 100%; margin-top: 25px; padding: 14px; background: var(--primary); color: #FFFFFF; border: none; border-radius: 12px; font-weight: 800; text-transform: uppercase; cursor: pointer;">Fechar</button>
+            
+            <button onclick="fecharModal()" style="width: 100%; margin-top: 25px; padding: 15px; background: var(--card-bg); color: var(--text-dark); border: 1px solid var(--border); border-radius: 12px; font-weight: 800; text-transform: uppercase; cursor: pointer;">Fechar</button>
         </div>
     </div>
 
     <script>
-        let compras = JSON.parse(localStorage.getItem('comprasPachecoV5')) || [];
-        let historico = JSON.parse(localStorage.getItem('historicoPachecoV5')) || [];
+        // Banco de dados Local
+        let historicoEstoque = JSON.parse(localStorage.getItem('historicoEstoquePacheco')) || [];
         
-        // Itens Padrões de Estoque da Aline
-        let itensPadrao = JSON.parse(localStorage.getItem('padroesPacheco')) || [
-            'Arroz', 'Feijão', 'Óleo', 'Limão', 'Cebola', 'Alho', 'Detergente'
+        // Itens Padrões Iniciais (Pode adicionar ou excluir pelo app)
+        let itensPadrao = JSON.parse(localStorage.getItem('itensEstoquePacheco')) || [
+            'Arroz (Pacote 5kg)', 
+            'Feijão (Pacote 1kg)', 
+            'Óleo (Lata)', 
+            'Sal Grosso (kg)', 
+            'Carvão (Saco)', 
+            'Detergente',
+            'Embalagem Marmita'
         ];
-        
-        let indexSendoEditado = -1;
 
-        function formatarMoeda(v) { return v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }); }
-
-        // RENDERIZA A LISTA DE ESTOQUE
+        // RENDERIZA A LISTA DE ESTOQUE NA TELA
         function renderizarPadroes() {
             const container = document.getElementById('lista-padroes');
             container.innerHTML = '';
+            
+            if(itensPadrao.length === 0) {
+                container.innerHTML = `<p style="text-align:center; color:#999; font-size: 14px; padding: 20px;">Nenhum item cadastrado.</p>`;
+                return;
+            }
+
             itensPadrao.forEach((item, i) => {
                 container.innerHTML += `
                     <div class="item-estoque-row">
                         <span class="item-estoque-nome">${item}</span>
                         <div style="display:flex; align-items:center;">
                             <input type="number" id="qtd-padrao-${i}" class="item-estoque-input" placeholder="Qtd">
-                            <button class="btn-del-padrao" onclick="removerPadrao(${i})" title="Remover da lista fixa"><i class="fas fa-times"></i></button>
+                            <button class="btn-del-padrao" onclick="removerPadrao(${i})" title="Remover do sistema"><i class="fas fa-trash"></i></button>
                         </div>
                     </div>
                 `;
             });
         }
 
+        // ADICIONAR NOVO ITEM FIXO
         function addNovoPadrao() {
-            const val = document.getElementById('novo-item-padrao').value.trim();
+            const input = document.getElementById('novo-item-padrao');
+            const val = input.value.trim();
             if (val) {
                 itensPadrao.push(val);
-                localStorage.setItem('padroesPacheco', JSON.stringify(itensPadrao));
-                document.getElementById('novo-item-padrao').value = '';
+                localStorage.setItem('itensEstoquePacheco', JSON.stringify(itensPadrao));
+                input.value = '';
                 renderizarPadroes();
+                // Rola para o final da lista para ver o item adicionado
+                const container = document.getElementById('lista-padroes');
+                container.scrollTop = container.scrollHeight;
             }
         }
 
+        // REMOVER ITEM FIXO
         function removerPadrao(i) {
-            if(confirm("Remover este item dos fixos?")) {
+            if(confirm("Tem certeza que deseja excluir este produto do sistema de estoque?")) {
                 itensPadrao.splice(i, 1);
-                localStorage.setItem('padroesPacheco', JSON.stringify(itensPadrao));
+                localStorage.setItem('itensEstoquePacheco', JSON.stringify(itensPadrao));
                 renderizarPadroes();
             }
         }
 
-        // PEGA AS QUANTIDADES E GERA A LISTA DE COMPRAS
-        function gerarListaDoEstoque() {
-            let itensAdicionados = 0;
+        // SALVAR A CONFERÊNCIA DE HOJE
+        function salvarChecagem() {
+            if(itensPadrao.length === 0) return alert("Não há itens para checar.");
+
+            let itensConferidos = [];
+            let titulo = document.getElementById('nome-lista-atual').value.trim();
             
-            // Lemos de trás pra frente para entrar na ordem certa na lista de baixo
-            for (let i = itensPadrao.length - 1; i >= 0; i--) {
+            // Varre a lista pegando o que foi digitado
+            itensPadrao.forEach((item, i) => {
                 let input = document.getElementById(`qtd-padrao-${i}`);
-                let qtd = parseFloat(input.value);
+                let qtd = input.value.trim();
                 
-                if (qtd > 0) {
-                    compras.unshift({ 
-                        nome: itensPadrao[i], 
-                        qtd: qtd, 
-                        peso: "", 
-                        preco: 0, 
-                        comprado: false 
-                    });
-                    input.value = ''; // Limpa o campo depois de enviar
-                    itensAdicionados++;
-                }
-            }
-
-            if (itensAdicionados > 0) {
-                salvarDados();
-                document.getElementById('ancora-input').scrollIntoView({ behavior: 'smooth' });
-            } else {
-                alert("Digite a quantidade de pelo menos um item do estoque para enviar!");
-            }
-        }
-
-        // LISTA DE COMPRAS PRINCIPAL
-        function renderizarLista() {
-            const lista = document.getElementById('lista');
-            const displayTotal = document.getElementById('total-geral');
-            lista.innerHTML = '';
-            let total = 0;
-
-            compras.forEach((it, i) => {
-                const q = parseFloat(it.qtd) || 1;
-                const p = parseFloat(it.peso) || 0;
-                const v = parseFloat(it.preco) || 0;
-                const sub = p > 0 ? (q * p * v) : (q * v);
-                total += sub;
-                
-                const li = document.createElement('li');
-                li.className = `item-compra ${it.comprado ? 'comprado' : ''} ${indexSendoEditado === i ? 'editando' : ''}`;
-                const infoPeso = p > 0 ? `${p}kg • ` : '';
-
-                li.innerHTML = `
-                    <div class="item-info" onclick="alternarComprado(${i})">
-                        <div class="checkbox-custom"><i class="fas fa-check"></i></div>
-                        <div class="item-textos">
-                            <span class="nome">${it.nome}</span>
-                            <span class="detalhes">${it.qtd}x • ${infoPeso}${formatarMoeda(v)}</span>
-                        </div>
-                    </div>
-                    <div class="acoes-container">
-                        <span class="subtotal-val">${formatarMoeda(sub)}</span>
-                        <button class="btn-acao-item btn-edit" onclick="iniciarEdicao(${i})"><i class="fas fa-pencil-alt"></i></button>
-                        <button class="btn-acao-item btn-del" onclick="removerItem(${i})"><i class="fas fa-trash-alt"></i></button>
-                    </div>
-                `;
-                lista.appendChild(li);
+                // Salva na conferência (Se deixou em branco, salva como 0 ou Vazio, aqui optei por salvar o que ele digitou)
+                itensConferidos.push({
+                    nome: item,
+                    qtd: qtd === "" ? "-" : qtd
+                });
             });
-            displayTotal.textContent = formatarMoeda(total);
-            renderizarHistorico();
-        }
 
-        function iniciarEdicao(index) {
-            indexSendoEditado = index;
-            const item = compras[index];
-            document.getElementById('nome-item').value = item.nome;
-            document.getElementById('qtd-item').value = item.qtd;
-            
-            document.getElementById('peso-item').value = item.peso > 0 ? item.peso : '';
-            document.getElementById('preco-item').value = item.preco > 0 ? item.preco : '';
-            
-            const btn = document.getElementById('btn-add-main');
-            btn.innerText = "Atualizar Item";
-            btn.classList.add('modo-edicao');
-            document.getElementById('ancora-input').scrollIntoView({ behavior: 'smooth' });
-            renderizarLista();
-        }
-
-        function adicionarItem() {
-            const n = document.getElementById('nome-item');
-            const q = document.getElementById('qtd-item');
-            const p = document.getElementById('peso-item'); 
-            const v = document.getElementById('preco-item');
-            
-            if (!n.value.trim()) return alert("Digite o nome do produto!");
-            
-            const dadosItem = { 
-                nome: n.value.trim(), 
-                qtd: q.value || 1, 
-                peso: p.value.replace(',', '.') || "", 
-                preco: v.value.replace(',', '.') || 0, 
-                comprado: indexSendoEditado !== -1 ? compras[indexSendoEditado].comprado : false 
-            };
-            
-            if (indexSendoEditado !== -1) {
-                compras[indexSendoEditado] = dadosItem;
-                indexSendoEditado = -1;
-                const btn = document.getElementById('btn-add-main');
-                btn.innerText = "Adicionar Item";
-                btn.classList.remove('modo-edicao');
-            } else {
-                compras.unshift(dadosItem);
-            }
-            
-            n.value = ''; q.value = ''; p.value = ''; v.value = '';
-            salvarDados();
-        }
-
-        function salvarListaParaHistorico() {
-            if (compras.length === 0) return;
-            const total = compras.reduce((acc, it) => acc + ((parseFloat(it.peso)||0) > 0 ? (it.qtd*it.peso*it.preco) : (it.qtd*it.preco)), 0);
-            historico.unshift({
+            // Cria o registro
+            let novoRegistro = {
                 id: Date.now(),
-                titulo: document.getElementById('nome-lista-atual').value.trim() || "Compra Avulsa",
+                titulo: titulo || "Checagem de Rotina",
                 data: new Date().toLocaleString('pt-BR'),
-                total: total,
-                itens: [...compras]
-            });
-            compras = [];
+                itens: itensConferidos
+            };
+
+            // Salva no começo do histórico
+            historicoEstoque.unshift(novoRegistro);
+            localStorage.setItem('historicoEstoquePacheco', JSON.stringify(historicoEstoque));
+
+            // Limpa a tela para a próxima
             document.getElementById('nome-lista-atual').value = '';
-            localStorage.setItem('historicoPachecoV5', JSON.stringify(historico));
-            salvarDados();
+            itensPadrao.forEach((item, i) => {
+                document.getElementById(`qtd-padrao-${i}`).value = '';
+            });
+
+            renderizarHistorico();
+            alert("✅ Checagem de estoque salva com sucesso!");
         }
 
+        // RENDERIZAR O HISTÓRICO
         function renderizarHistorico() {
             const container = document.getElementById('historico-lista');
             container.innerHTML = '';
-            historico.forEach(compra => {
+            
+            if(historicoEstoque.length === 0) {
+                container.innerHTML = `<p style="text-align:center; color:#999; font-size: 14px;">Nenhum histórico registrado.</p>`;
+                return;
+            }
+
+            historicoEstoque.forEach(registro => {
                 const div = document.createElement('div');
                 div.className = 'card-historico';
                 div.innerHTML = `
-                    <span class="hist-nome-lista">${compra.titulo}</span>
+                    <span class="hist-nome-lista">${registro.titulo}</span>
                     <div class="hist-header">
-                        <span style="font-size:10px; color: var(--text-light);">${compra.data}</span>
-                        <span class="hist-total">${formatarMoeda(compra.total)}</span>
+                        <span style="font-size:12px; color: var(--text-light);"><i class="far fa-calendar-alt"></i> ${registro.data}</span>
                     </div>
                     <div class="hist-acoes">
-                        <button class="btn-hist btn-view" onclick="verDetalhes(${compra.id})">Ver Itens</button>
-                        <button class="btn-hist btn-del-hist" onclick="excluirHistorico(${compra.id})">Apagar</button>
+                        <button class="btn-hist btn-view" onclick="verDetalhes(${registro.id})"><i class="far fa-eye"></i> Ver Relatório</button>
+                        <button class="btn-hist btn-del-hist" onclick="excluirHistorico(${registro.id})"><i class="fas fa-trash"></i> Apagar</button>
                     </div>
                 `;
                 container.appendChild(div);
             });
         }
 
+        // MODAL DO HISTÓRICO
         function verDetalhes(id) {
-            const compra = historico.find(h => h.id === id);
-            document.getElementById('modal-titulo-lista').innerText = compra.titulo;
+            const registro = historicoEstoque.find(h => h.id === id);
+            if(!registro) return;
+
+            document.getElementById('modal-titulo-lista').innerText = registro.titulo;
+            document.getElementById('modal-data-lista').innerText = "Realizado em: " + registro.data;
+            
             const listaModal = document.getElementById('modal-lista-itens');
             listaModal.innerHTML = '';
-            compra.itens.forEach(it => {
-                const sub = (parseFloat(it.peso)||0) > 0 ? (it.qtd*it.peso*it.preco) : (it.qtd*it.preco);
-                listaModal.innerHTML += `<li style="padding: 12px 0; border-bottom: 1px solid var(--border); display:flex; justify-content:space-between; align-items:center;">
-                    <span style="color: var(--text-dark); font-size: 14px;">${it.qtd}x ${it.nome} ${it.peso > 0 ? '('+it.peso+'kg)' : ''}</span>
-                    <span style="color:var(--primary); font-weight:700; font-size: 14px;">${formatarMoeda(sub)}</span>
-                </li>`;
+            
+            registro.itens.forEach(it => {
+                // Destaca se a quantidade for um traço (não preenchido)
+                let corQtd = it.qtd === "-" ? "#ccc" : "var(--text-dark)";
+                let bgBadge = it.qtd === "-" ? "#f5f5f5" : "var(--primary)";
+                let txtBadge = it.qtd === "-" ? "#999" : "#fff";
+
+                listaModal.innerHTML += `
+                    <li class="linha-modal">
+                        <span style="color: var(--text-dark); font-size: 15px; font-weight: 600;">${it.nome}</span>
+                        <span class="qtd-badge" style="background: ${bgBadge}; color: ${txtBadge};">${it.qtd}</span>
+                    </li>
+                `;
             });
             document.getElementById('modal-itens').style.display = 'flex';
         }
 
-        function fecharModal() { document.getElementById('modal-itens').style.display = 'none'; }
-        function removerItem(i) { if(confirm("Remover este item?")) { compras.splice(i, 1); if(indexSendoEditado===i) indexSendoEditado=-1; salvarDados(); } }
-        function excluirHistorico(id) { if(confirm("Apagar histórico?")){ historico = historico.filter(h => h.id !== id); localStorage.setItem('historicoPachecoV5', JSON.stringify(historico)); renderizarHistorico(); } }
-        function alternarComprado(i) { compras[i].comprado = !compras[i].comprado; salvarDados(); }
+        function fecharModal() { 
+            document.getElementById('modal-itens').style.display = 'none'; 
+        }
         
-        function salvarDados() { 
-            localStorage.setItem('comprasPachecoV5', JSON.stringify(compras)); 
-            renderizarLista(); 
+        function excluirHistorico(id) { 
+            if(confirm("Tem certeza que deseja apagar este relatório do histórico?")) { 
+                historicoEstoque = historicoEstoque.filter(h => h.id !== id); 
+                localStorage.setItem('historicoEstoquePacheco', JSON.stringify(historicoEstoque)); 
+                renderizarHistorico(); 
+            } 
         }
 
         // Inicia a tela
         renderizarPadroes();
-        renderizarLista();
+        renderizarHistorico();
     </script>
 </body>
 </html>
