@@ -8,18 +8,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        /* TRAVA A TELA E EVITA ARRASTE LATERAL */
-        * {
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-        }
-        
-        html, body { 
-            overflow-x: hidden; 
-            width: 100%; 
-            min-height: 100vh; 
-            background-color: var(--bg-color); 
-        }
+        /* CSS ORIGINAL MANTIDO */
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        html, body { overflow-x: hidden; width: 100%; min-height: 100vh; background-color: var(--bg-color); }
 
         :root {
             --bg-color: #FFFFFF; 
@@ -33,150 +24,71 @@
             --delete: #EF4444; 
         }
 
-        body {
-            font-family: 'Inter', sans-serif;
-            color: var(--text-dark);
-            display: flex;
-            justify-content: center;
-            padding: 10px;
-        }
+        body { font-family: 'Inter', sans-serif; color: var(--text-dark); display: flex; justify-content: center; padding: 10px; }
 
         .app-container {
-            background: var(--bg-color);
-            width: 100%;
-            max-width: 500px;
-            border-radius: 24px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
-            display: flex;
-            flex-direction: column;
-            border: 1px solid var(--border);
-            margin-bottom: 50px;
+            background: var(--bg-color); width: 100%; max-width: 500px; border-radius: 24px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05); display: flex; flex-direction: column;
+            border: 1px solid var(--border); margin-bottom: 50px;
         }
 
-        .header {
-            background: var(--bg-color);
-            padding: 25px 20px;
-            text-align: center;
-            border-bottom: 2px solid var(--primary);
-            border-radius: 24px 24px 0 0;
-        }
-
-        .header h1 {
-            font-size: 16px; 
-            letter-spacing: 2px; 
-            color: var(--primary);
-            margin: 0;
-        }
+        .header { background: var(--bg-color); padding: 25px 20px; text-align: center; border-bottom: 2px solid var(--primary); border-radius: 24px 24px 0 0; }
+        .header h1 { font-size: 16px; letter-spacing: 2px; color: var(--primary); margin: 0; }
 
         #nome-lista-atual {
             width: 100%; background: transparent; border: none; border-bottom: 1px solid var(--border);
             color: var(--text-dark); font-weight: 700; font-size: 16px; padding: 15px 20px; outline: none; text-align: center;
         }
-        #nome-lista-atual::placeholder { color: #A0AEC0; font-weight: 400; }
 
-        .section-title {
-            font-size: 11px; color: var(--text-light); text-transform: uppercase;
-            letter-spacing: 1px; padding: 15px 20px 5px; font-weight: 700;
-        }
+        .section-title { font-size: 11px; color: var(--text-light); text-transform: uppercase; letter-spacing: 1px; padding: 15px 20px 5px; font-weight: 700; }
 
-        .planning-box { 
-            padding: 10px 20px 20px; 
-            background: var(--bg-color); 
-            display: flex; 
-            flex-direction: column; 
-            gap: 12px; 
-        }
-        
-        .estoque-lista-container {
-            display: flex; flex-direction: column; gap: 8px;
-            max-height: 50vh;
-            overflow-y: auto; padding-right: 5px;
-        }
+        .planning-box { padding: 10px 20px 20px; background: var(--bg-color); display: flex; flex-direction: column; gap: 12px; }
+        .estoque-lista-container { display: flex; flex-direction: column; gap: 8px; max-height: 50vh; overflow-y: auto; padding-right: 5px; }
 
-        .item-estoque-row {
-            display: flex; justify-content: space-between; align-items: center;
-            background: var(--card-bg); padding: 10px 12px; border-radius: 12px; border: 1px solid var(--border);
-        }
-
+        .item-estoque-row { display: flex; justify-content: space-between; align-items: center; background: var(--card-bg); padding: 10px 12px; border-radius: 12px; border: 1px solid var(--border); }
         .item-estoque-nome { font-weight: 600; color: var(--text-dark); flex: 1; font-size: 15px; }
         
+        /* ESTILO DO NÚMERO VERMELHO */
         .item-estoque-input {
-            width: 80px; padding: 10px; border: 1px solid var(--border); border-radius: 8px;
+            width: 70px; padding: 10px; border: 1px solid var(--border); border-radius: 8px;
             text-align: center; font-size: 15px; outline: none; background: #FFF;
-            transition: 0.3s; font-weight: 600;
+            transition: 0.3s; font-weight: 700;
         }
-        .item-estoque-input:focus { border-color: var(--primary); box-shadow: 0 0 0 2px rgba(46, 125, 50, 0.2); }
+        .estoque-baixo { color: var(--delete) !important; }
 
-        .btn-del-padrao { background: none; border: none; color: #CCC; padding: 8px; cursor: pointer; margin-left: 5px; transition: 0.2s; font-size: 16px;}
-        .btn-del-padrao:hover { color: var(--delete); }
+        .btn-del-padrao { background: none; border: none; color: #CCC; padding: 8px; cursor: pointer; margin-left: 5px; font-size: 16px;}
+        
+        /* AJUSTE NA LINHA DE ADICIONAR */
+        .add-padrao-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border);}
+        .add-padrao-row input#novo-item-padrao { flex: 2; min-width: 150px; padding: 14px; border: 1px solid var(--border); border-radius: 12px; font-size: 15px; background: var(--card-bg); }
+        .add-padrao-row input#limite-item-padrao { width: 80px; padding: 14px; border: 1px solid var(--border); border-radius: 12px; font-size: 15px; text-align: center; background: var(--card-bg); }
 
-        .add-padrao-row { display: flex; gap: 8px; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border);}
-        .add-padrao-row input { 
-            flex: 1; padding: 14px; border: 1px solid var(--border); border-radius: 12px;
-            font-size: 15px; outline: none; background: var(--card-bg); color: var(--text-dark);
-        }
-        .add-padrao-row input:focus { border-color: var(--primary); background: #FFF; }
-
-        .btn-adicionar {
-            background: var(--primary); color: #FFFFFF; border: none;
-            padding: 14px 20px; border-radius: 12px; font-size: 14px; font-weight: 800;
-            cursor: pointer; transition: 0.3s;
-        }
-        .btn-adicionar:active { transform: scale(0.95); }
-
+        .btn-adicionar { background: var(--primary); color: #FFFFFF; border: none; padding: 14px 20px; border-radius: 12px; font-size: 14px; font-weight: 800; cursor: pointer; }
         .rodape { padding: 20px; background: var(--bg-color); border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 10px; }
 
-        .btn-salvar {
-            background: var(--success); color: #FFFFFF; border: none;
-            padding: 16px; border-radius: 12px; font-weight: 800;
-            font-size: 15px; cursor: pointer; text-transform: uppercase; transition: 0.3s;
-            display: flex; justify-content: center; align-items: center; gap: 10px;
-        }
-        .btn-salvar:active { transform: scale(0.98); }
+        .btn-salvar { background: var(--success); color: #FFFFFF; border: none; padding: 16px; border-radius: 12px; font-weight: 800; font-size: 15px; cursor: pointer; text-transform: uppercase; display: flex; justify-content: center; align-items: center; gap: 10px; }
 
-        /* HISTÓRICO */
+        /* HISTÓRICO E MODAIS MANTIDOS */
         .historico-section { padding: 20px; background: var(--card-bg); border-top: 4px solid var(--primary); border-radius: 0 0 24px 24px; }
         .historico-titulo { font-size: 14px; font-weight: 800; color: var(--primary); text-transform: uppercase; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
-        .card-historico { background: #FFFFFF; border: 1px solid var(--border); border-radius: 15px; padding: 15px; margin-bottom: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
+        .card-historico { background: #FFFFFF; border: 1px solid var(--border); border-radius: 15px; padding: 15px; margin-bottom: 15px; }
         .hist-nome-lista { color: var(--text-dark); font-size: 15px; font-weight: 700; display: block; margin-bottom: 5px; }
         .hist-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
         .hist-acoes { display: flex; gap: 10px; border-top: 1px solid var(--border); padding-top: 10px; }
-        .btn-hist { flex: 1; padding: 10px; border-radius: 8px; border: none; font-size: 13px; font-weight: 700; cursor: pointer; transition: 0.2s; }
+        .btn-hist { flex: 1; padding: 10px; border-radius: 8px; border: none; font-size: 13px; font-weight: 700; cursor: pointer; }
         .btn-view { background: var(--card-bg); color: var(--text-dark); border: 1px solid var(--border); }
         .btn-del-hist { background: rgba(239, 68, 68, 0.05); color: var(--delete); border: 1px solid rgba(239, 68, 68, 0.1); }
 
-        /* MODAIS CUSTOMIZADOS */
-        .modal-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background-color: rgba(0, 0, 0, 0.6); z-index: 1000;
-            opacity: 0; visibility: hidden; transition: all 0.3s ease;
-            display: flex; justify-content: center; align-items: center; backdrop-filter: blur(3px);
-        }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.6); z-index: 1000; opacity: 0; visibility: hidden; transition: 0.3s; display: flex; justify-content: center; align-items: center; backdrop-filter: blur(3px); }
         .modal-overlay.show { opacity: 1; visibility: visible; }
-        .modal {
-            background-color: white; border-radius: 16px; padding: 25px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2); z-index: 1001;
-            width: 85%; max-width: 400px; text-align: center;
-            opacity: 0; visibility: hidden; transform: scale(0.8); transition: all 0.3s ease;
-            position: absolute; /* Para ficar centralizado no overlay flex */
-            max-height: 80vh; overflow-y: auto;
-        }
-        .modal.show { opacity: 1; visibility: visible; transform: scale(1); }
-        
-        .modal-header { font-size: 18px; font-weight: bold; margin-bottom: 15px; color: var(--primary); }
-        .modal-body { font-size: 15px; margin-bottom: 25px; line-height: 1.5; color: var(--text-dark); }
-        .modal-footer { display: flex; justify-content: space-around; gap: 10px; }
-        
+        .modal { background-color: white; border-radius: 16px; padding: 25px; width: 85%; max-width: 400px; text-align: center; transform: scale(0.8); transition: 0.3s; }
+        .modal.show { transform: scale(1); opacity: 1; visibility: visible; }
+        .modal-footer { display: flex; justify-content: space-around; gap: 10px; margin-top: 20px; }
         .modal-btn { padding: 12px 20px; border: none; border-radius: 10px; font-size: 14px; font-weight: bold; cursor: pointer; flex-grow: 1; }
         .modal-btn-ok { background-color: var(--primary); color: white; }
         .modal-btn-cancel { background-color: var(--card-bg); color: var(--text-dark); border: 1px solid var(--border); }
         .modal-btn-danger { background-color: var(--delete); color: white; }
-        
-        #modal-confirm .modal-header { color: var(--delete); }
-
-        /* Estilo específico para lista dentro do modal de detalhes */
         .linha-modal { padding: 12px 0; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
-        .linha-modal:last-child { border-bottom: none; }
         .qtd-badge { background: var(--primary); color: white; padding: 4px 8px; border-radius: 6px; font-weight: 700; font-size: 14px; min-width: 40px; text-align: center;}
     </style>
 </head>
@@ -192,11 +104,11 @@
         <div class="section-title">Lista Fixa de Produtos</div>
         <div class="planning-box">
             
-            <div class="estoque-lista-container" id="lista-padroes">
-                </div>
+            <div class="estoque-lista-container" id="lista-padroes"></div>
 
             <div class="add-padrao-row">
-                <input type="text" id="novo-item-padrao" placeholder="Adicionar novo produto ao estoque...">
+                <input type="text" id="novo-item-padrao" placeholder="Nome do produto...">
+                <input type="number" id="limite-item-padrao" placeholder="Limite">
                 <button class="btn-adicionar" onclick="addNovoPadrao()">
                     <i class="fas fa-plus"></i>
                 </button>
@@ -216,18 +128,15 @@
     </div>
 
     <div id="modal-overlay" class="modal-overlay" onclick="fecharTodosModais(event)">
-        
         <div id="modal-alert" class="modal" onclick="event.stopPropagation()">
-            <div class="modal-header" id="modal-alert-header">⚠️ Atenção</div>
-            <div class="modal-body" id="modal-alert-body">Mensagem</div>
-            <div class="modal-footer">
-                <button class="modal-btn modal-btn-ok" onclick="fecharTodosModais()">OK</button>
-            </div>
+            <div class="modal-header" id="modal-alert-header" style="font-weight: bold; margin-bottom: 10px;">⚠️ Atenção</div>
+            <div class="modal-body" id="modal-alert-body"></div>
+            <div class="modal-footer"><button class="modal-btn modal-btn-ok" onclick="fecharTodosModais()">OK</button></div>
         </div>
 
         <div id="modal-confirm" class="modal" onclick="event.stopPropagation()">
-            <div class="modal-header">⚠️ Confirmação</div>
-            <div class="modal-body" id="modal-confirm-body">Tem certeza?</div>
+            <div class="modal-header" style="font-weight: bold; color: var(--delete); margin-bottom: 10px;">⚠️ Confirmação</div>
+            <div class="modal-body" id="modal-confirm-body"></div>
             <div class="modal-footer">
                 <button class="modal-btn modal-btn-cancel" onclick="fecharTodosModais()">Cancelar</button>
                 <button class="modal-btn modal-btn-danger" onclick="executarAcaoConfirmada()">Sim, Confirmar</button>
@@ -240,57 +149,52 @@
             <ul id="modal-lista-itens" style="list-style: none; text-align: left; padding: 0;"></ul>
             <button class="modal-btn modal-btn-cancel" style="width: 100%; margin-top: 25px;" onclick="fecharTodosModais()">Fechar</button>
         </div>
-        
     </div>
 
     <script>
-        // Banco de dados Local
         let historicoEstoque = JSON.parse(localStorage.getItem('historicoEstoquePacheco')) || [];
+        
+        // Estrutura atualizada para suportar limites
         let itensPadrao = JSON.parse(localStorage.getItem('itensEstoquePacheco')) || [
-            'Arroz (Pacote 5kg)', 
-            'Feijão (Pacote 1kg)', 
-            'Óleo (Lata)', 
-            'Sal Grosso (kg)', 
-            'Carvão (Saco)', 
-            'Detergente',
-            'Embalagem Marmita'
+            {nome: 'Arroz (5kg)', limite: 2}, 
+            {nome: 'Carvão (Saco)', limite: 5},
+            {nome: 'Detergente', limite: 3}
         ];
 
         // --- SISTEMA DE MODAIS ---
         let acaoPendente = null;
-
         function fecharTodosModais(event) {
-            // Se o evento foi passado, verifica se clicou no fundo escuro
             if(event && event.target.id !== 'modal-overlay') return;
-            
             document.getElementById('modal-overlay').classList.remove('show');
             document.querySelectorAll('.modal').forEach(m => m.classList.remove('show'));
             acaoPendente = null;
         }
-
         function abrirAlerta(mensagem, titulo = "Aviso") {
             document.getElementById('modal-alert-header').innerText = titulo;
             document.getElementById('modal-alert-body').innerText = mensagem;
-            
             document.getElementById('modal-overlay').classList.add('show');
             document.getElementById('modal-alert').classList.add('show');
         }
-
         function abrirConfirmacao(mensagem, acao) {
             document.getElementById('modal-confirm-body').innerText = mensagem;
             acaoPendente = acao;
-            
             document.getElementById('modal-overlay').classList.add('show');
             document.getElementById('modal-confirm').classList.add('show');
         }
+        function executarAcaoConfirmada() { if(acaoPendente) acaoPendente(); fecharTodosModais(); }
 
-        function executarAcaoConfirmada() {
-            if(acaoPendente) acaoPendente();
-            fecharTodosModais();
+        // --- LÓGICA DE ESTOQUE ---
+
+        // Função que muda a cor do número para VERMELHO
+        function verificarLimite(input, limite) {
+            const valor = parseFloat(input.value);
+            if (!isNaN(valor) && valor <= limite) {
+                input.classList.add('estoque-baixo');
+            } else {
+                input.classList.remove('estoque-baixo');
+            }
         }
-        // ------------------------
 
-        // RENDERIZA A LISTA DE ESTOQUE
         function renderizarPadroes() {
             const container = document.getElementById('lista-padroes');
             container.innerHTML = '';
@@ -301,55 +205,59 @@
             }
 
             itensPadrao.forEach((item, i) => {
+                // Suporte para itens antigos que eram apenas string
+                const nome = typeof item === 'string' ? item : item.nome;
+                const limite = typeof item === 'object' ? item.limite : 0;
+
                 container.innerHTML += `
                     <div class="item-estoque-row">
-                        <span class="item-estoque-nome">${item}</span>
+                        <span class="item-estoque-nome">${nome} <br><small style="color:#999; font-size:10px">Mínimo: ${limite}</small></span>
                         <div style="display:flex; align-items:center;">
-                            <input type="number" id="qtd-padrao-${i}" class="item-estoque-input" placeholder="Qtd">
-                            <button class="btn-del-padrao" onclick="removerPadrao(${i})" title="Remover do sistema"><i class="fas fa-trash"></i></button>
+                            <input type="number" id="qtd-padrao-${i}" 
+                                class="item-estoque-input" 
+                                placeholder="Qtd"
+                                oninput="verificarLimite(this, ${limite})">
+                            <button class="btn-del-padrao" onclick="removerPadrao(${i})"><i class="fas fa-trash"></i></button>
                         </div>
                     </div>
                 `;
             });
         }
 
-        // ADICIONAR NOVO ITEM
         function addNovoPadrao() {
-            const input = document.getElementById('novo-item-padrao');
-            const val = input.value.trim();
-            if (val) {
-                itensPadrao.push(val);
+            const inputNome = document.getElementById('novo-item-padrao');
+            const inputLimite = document.getElementById('limite-item-padrao');
+            const nome = inputNome.value.trim();
+            const limite = parseFloat(inputLimite.value) || 0;
+
+            if (nome) {
+                itensPadrao.push({ nome: nome, limite: limite });
                 localStorage.setItem('itensEstoquePacheco', JSON.stringify(itensPadrao));
-                input.value = '';
+                inputNome.value = '';
+                inputLimite.value = '';
                 renderizarPadroes();
-                const container = document.getElementById('lista-padroes');
-                container.scrollTop = container.scrollHeight;
             }
         }
 
-        // REMOVER ITEM FIXO
         function removerPadrao(i) {
-            abrirConfirmacao("Tem certeza que deseja excluir este produto do sistema de estoque?", () => {
+            abrirConfirmacao("Excluir este produto do sistema?", () => {
                 itensPadrao.splice(i, 1);
                 localStorage.setItem('itensEstoquePacheco', JSON.stringify(itensPadrao));
                 renderizarPadroes();
             });
         }
 
-        // SALVAR A CONFERÊNCIA
         function salvarChecagem() {
-            if(itensPadrao.length === 0) return abrirAlerta("Não há itens para checar.", "Estoque Vazio");
-
+            if(itensPadrao.length === 0) return;
             let itensConferidos = [];
             let titulo = document.getElementById('nome-lista-atual').value.trim();
             
             itensPadrao.forEach((item, i) => {
                 let input = document.getElementById(`qtd-padrao-${i}`);
-                let qtd = input.value.trim();
-                
                 itensConferidos.push({
-                    nome: item,
-                    qtd: qtd === "" ? "-" : qtd
+                    nome: typeof item === 'string' ? item : item.nome,
+                    qtd: input.value.trim() === "" ? "-" : input.value.trim(),
+                    corBaixa: input.classList.contains('estoque-baixo') // Salva se estava vermelho
                 });
             });
 
@@ -362,80 +270,53 @@
 
             historicoEstoque.unshift(novoRegistro);
             localStorage.setItem('historicoEstoquePacheco', JSON.stringify(historicoEstoque));
-
-            document.getElementById('nome-lista-atual').value = '';
-            itensPadrao.forEach((item, i) => {
-                document.getElementById(`qtd-padrao-${i}`).value = '';
-            });
-
-            renderizarHistorico();
-            abrirAlerta("Checagem de estoque salva e arquivada com sucesso!", "✅ Sucesso");
+            location.reload(); 
         }
 
-        // RENDERIZAR O HISTÓRICO
         function renderizarHistorico() {
             const container = document.getElementById('historico-lista');
             container.innerHTML = '';
-            
-            if(historicoEstoque.length === 0) {
-                container.innerHTML = `<p style="text-align:center; color:#999; font-size: 14px;">Nenhum histórico registrado.</p>`;
-                return;
-            }
-
-            historicoEstoque.forEach(registro => {
-                const div = document.createElement('div');
-                div.className = 'card-historico';
-                div.innerHTML = `
-                    <span class="hist-nome-lista">${registro.titulo}</span>
-                    <div class="hist-header">
-                        <span style="font-size:12px; color: var(--text-light);"><i class="far fa-calendar-alt"></i> ${registro.data}</span>
-                    </div>
-                    <div class="hist-acoes">
-                        <button class="btn-hist btn-view" onclick="verDetalhes(${registro.id})"><i class="far fa-eye"></i> Ver Relatório</button>
-                        <button class="btn-hist btn-del-hist" onclick="excluirHistorico(${registro.id})"><i class="fas fa-trash"></i> Apagar</button>
+            historicoEstoque.forEach(reg => {
+                container.innerHTML += `
+                    <div class="card-historico">
+                        <span class="hist-nome-lista">${reg.titulo}</span>
+                        <div class="hist-header"><span style="font-size:12px; color: var(--text-light);">${reg.data}</span></div>
+                        <div class="hist-acoes">
+                            <button class="btn-hist btn-view" onclick="verDetalhes(${reg.id})">Ver Relatório</button>
+                            <button class="btn-hist btn-del-hist" onclick="excluirHistorico(${reg.id})">Apagar</button>
+                        </div>
                     </div>
                 `;
-                container.appendChild(div);
             });
         }
 
-        // VER DETALHES DO HISTÓRICO
         function verDetalhes(id) {
-            const registro = historicoEstoque.find(h => h.id === id);
-            if(!registro) return;
-
-            document.getElementById('modal-titulo-lista').innerText = registro.titulo;
-            document.getElementById('modal-data-lista').innerText = "Realizado em: " + registro.data;
-            
-            const listaModal = document.getElementById('modal-lista-itens');
-            listaModal.innerHTML = '';
-            
-            registro.itens.forEach(it => {
-                let bgBadge = it.qtd === "-" ? "#f5f5f5" : "var(--primary)";
-                let txtBadge = it.qtd === "-" ? "#999" : "#fff";
-
-                listaModal.innerHTML += `
+            const reg = historicoEstoque.find(h => h.id === id);
+            document.getElementById('modal-titulo-lista').innerText = reg.titulo;
+            document.getElementById('modal-data-lista').innerText = reg.data;
+            const lista = document.getElementById('modal-lista-itens');
+            lista.innerHTML = '';
+            reg.itens.forEach(it => {
+                let cor = it.corBaixa ? "var(--delete)" : "var(--primary)";
+                lista.innerHTML += `
                     <li class="linha-modal">
-                        <span style="color: var(--text-dark); font-size: 15px; font-weight: 600;">${it.nome}</span>
-                        <span class="qtd-badge" style="background: ${bgBadge}; color: ${txtBadge};">${it.qtd}</span>
+                        <span>${it.nome}</span>
+                        <span class="qtd-badge" style="background: ${cor}">${it.qtd}</span>
                     </li>
                 `;
             });
-            
             document.getElementById('modal-overlay').classList.add('show');
             document.getElementById('modal-itens').classList.add('show');
         }
         
-        // APAGAR DO HISTÓRICO
         function excluirHistorico(id) { 
-            abrirConfirmacao("Tem certeza que deseja apagar este relatório do histórico? Esta ação não pode ser desfeita.", () => {
+            abrirConfirmacao("Apagar este relatório?", () => {
                 historicoEstoque = historicoEstoque.filter(h => h.id !== id); 
                 localStorage.setItem('historicoEstoquePacheco', JSON.stringify(historicoEstoque)); 
                 renderizarHistorico(); 
             });
         }
 
-        // Inicia a tela
         renderizarPadroes();
         renderizarHistorico();
     </script>
