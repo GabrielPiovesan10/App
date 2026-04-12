@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Checagem de Estoque</title>
+    <title>Estoque Inteligente Deck</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -20,6 +20,7 @@
             --border: #E5E7EB; 
             --success: #10B981; 
             --delete: #EF4444; 
+            --category-bg: #eceff1;
         }
 
         body { font-family: 'Inter', sans-serif; color: var(--text-dark); display: flex; justify-content: center; padding: 10px; }
@@ -41,19 +42,25 @@
         .section-title { font-size: 11px; color: var(--text-light); text-transform: uppercase; letter-spacing: 1px; padding: 15px 20px 5px; font-weight: 700; }
 
         .planning-box { padding: 10px 20px 20px; background: var(--bg-color); display: flex; flex-direction: column; gap: 12px; }
-        .estoque-lista-container { display: flex; flex-direction: column; gap: 8px; max-height: 50vh; overflow-y: auto; padding-right: 5px; }
+        .estoque-lista-container { display: flex; flex-direction: column; gap: 8px; max-height: 60vh; overflow-y: auto; padding-right: 5px; }
 
-        .item-estoque-row { display: flex; justify-content: space-between; align-items: center; background: var(--card-bg); padding: 10px 12px; border-radius: 12px; border: 1px solid var(--border); }
-        .item-estoque-nome { font-weight: 600; color: var(--text-dark); flex: 1; font-size: 15px; }
+        .category-header {
+            background: var(--category-bg); color: var(--text-dark); font-size: 12px;
+            font-weight: 800; padding: 8px 15px; border-radius: 8px; margin-top: 15px;
+            text-transform: uppercase; display: flex; align-items: center; gap: 8px;
+        }
+
+        .item-estoque-row { display: flex; justify-content: space-between; align-items: center; background: var(--card-bg); padding: 10px 12px; border-radius: 12px; border: 1px solid var(--border); margin-top: 5px; }
+        .item-estoque-nome { font-weight: 600; color: var(--text-dark); flex: 1; font-size: 14px; }
         
         .item-estoque-input {
             width: 70px; padding: 10px; border: 1px solid var(--border); border-radius: 8px;
             text-align: center; font-size: 15px; outline: none; background: #FFF;
             transition: 0.3s; font-weight: 700;
         }
-        .estoque-baixo { color: var(--delete) !important; border-color: var(--delete) !important; }
+        .estoque-baixo { color: var(--delete) !important; border-color: var(--delete) !important; background: #fff5f5 !important; }
 
-        .btn-del-padrao { background: none; border: none; color: #CCC; padding: 8px; cursor: pointer; margin-left: 5px; font-size: 16px;}
+        .btn-del-padrao { background: none; border: none; color: #CCC; padding: 8px; cursor: pointer; margin-left: 5px; font-size: 14px;}
         
         .add-padrao-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border);}
         .add-padrao-row input#novo-item-padrao { flex: 2; min-width: 150px; padding: 14px; border: 1px solid var(--border); border-radius: 12px; font-size: 15px; background: var(--card-bg); }
@@ -65,57 +72,37 @@
         .btn-salvar { background: var(--success); color: #FFFFFF; border: none; padding: 16px; border-radius: 12px; font-weight: 800; font-size: 15px; cursor: pointer; text-transform: uppercase; display: flex; justify-content: center; align-items: center; gap: 10px; }
 
         .historico-section { padding: 20px; background: var(--card-bg); border-top: 4px solid var(--primary); border-radius: 0 0 24px 24px; }
-        .historico-titulo { font-size: 14px; font-weight: 800; color: var(--primary); text-transform: uppercase; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
         .card-historico { background: #FFFFFF; border: 1px solid var(--border); border-radius: 15px; padding: 15px; margin-bottom: 15px; }
-        .hist-nome-lista { color: var(--text-dark); font-size: 15px; font-weight: 700; display: block; margin-bottom: 5px; }
-        .hist-acoes { display: flex; gap: 10px; border-top: 1px solid var(--border); padding-top: 10px; }
-        .btn-hist { flex: 1; padding: 10px; border-radius: 8px; border: none; font-size: 13px; font-weight: 700; cursor: pointer; }
-        .btn-view { background: var(--card-bg); color: var(--text-dark); border: 1px solid var(--border); }
-        .btn-del-hist { background: rgba(239, 68, 68, 0.05); color: var(--delete); border: 1px solid rgba(239, 68, 68, 0.1); }
+        .hist-acoes { display: flex; gap: 10px; border-top: 1px solid var(--border); padding-top: 10px; margin-top: 10px; }
+        .btn-hist { flex: 1; padding: 10px; border-radius: 8px; border: none; font-size: 12px; font-weight: 700; cursor: pointer; }
 
-        /* MODAIS CORRIGIDOS - SEM CAIXINHAS LATERAIS */
-        .modal-overlay { 
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background-color: rgba(0, 0, 0, 0.6); z-index: 1000; 
-            display: none; justify-content: center; align-items: center; 
-            backdrop-filter: blur(3px); 
-        }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.6); z-index: 1000; display: none; justify-content: center; align-items: center; backdrop-filter: blur(3px); }
         .modal-overlay.show { display: flex; }
-        
-        .modal { 
-            background-color: white; border-radius: 16px; padding: 25px; 
-            width: 85%; max-width: 400px; text-align: center; 
-            display: none; flex-direction: column;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-        }
+        .modal { background-color: white; border-radius: 16px; padding: 25px; width: 85%; max-width: 400px; text-align: center; display: none; flex-direction: column; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
         .modal.show { display: flex; animation: surge 0.2s ease-out; }
-
         @keyframes surge { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-
         .modal-footer { display: flex; justify-content: space-around; gap: 10px; margin-top: 20px; }
         .modal-btn { padding: 12px 20px; border: none; border-radius: 10px; font-size: 14px; font-weight: bold; cursor: pointer; flex-grow: 1; }
-        .modal-btn-ok { background-color: var(--primary); color: white; }
-        .modal-btn-cancel { background-color: var(--card-bg); color: var(--text-dark); border: 1px solid var(--border); }
-        .modal-btn-danger { background-color: var(--delete); color: white; }
-        .linha-modal { padding: 12px 0; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
-        .qtd-badge { background: var(--primary); color: white; padding: 4px 8px; border-radius: 6px; font-weight: 700; font-size: 14px; min-width: 40px; text-align: center;}
+        .linha-modal { padding: 10px 0; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+        .qtd-badge { background: var(--primary); color: white; padding: 4px 8px; border-radius: 6px; font-weight: 700; font-size: 13px; min-width: 35px; text-align: center;}
     </style>
 </head>
 <body>
 
     <div class="app-container">
         <div class="header">
-            <h1><i class="fas fa-boxes"></i> CONTROLE DE ESTOQUE</h1>
+            <h1><i class="fas fa-boxes"></i> ESTOQUE ORGANIZADO</h1>
         </div>
         
-        <input type="text" id="nome-lista-atual" placeholder="Título (Ex: Conferência Matinal)">
+        <input type="text" id="nome-lista-atual" placeholder="Título da Conferência">
 
-        <div class="section-title">Lista de Produtos</div>
+        <div class="section-title">Controle por Categorias</div>
         <div class="planning-box">
             <div class="estoque-lista-container" id="lista-padroes"></div>
+            
             <div class="add-padrao-row">
-                <input type="text" id="novo-item-padrao" placeholder="Nome do produto...">
-                <input type="number" id="limite-item-padrao" placeholder="Limite">
+                <input type="text" id="novo-item-padrao" placeholder="Ex: Tomate, Picanha, Coca...">
+                <input type="number" id="limite-item-padrao" placeholder="Min.">
                 <button class="btn-adicionar" onclick="addNovoPadrao()">
                     <i class="fas fa-plus"></i>
                 </button>
@@ -124,49 +111,67 @@
 
         <div class="rodape">
             <button class="btn-salvar" onclick="salvarChecagem()">
-                <i class="fas fa-save"></i> Salvar Checagem
+                <i class="fas fa-save"></i> Salvar e Limpar
             </button>
         </div>
 
         <div class="historico-section">
-            <div class="historico-titulo"><i class="fas fa-history"></i> Histórico</div>
+            <div class="section-title" style="padding:0; margin-bottom:15px;"><i class="fas fa-history"></i> Histórico Recente</div>
             <div id="historico-lista"></div>
         </div>
     </div>
 
     <div id="modal-overlay" class="modal-overlay" onclick="fecharTodosModais(event)">
-        
         <div id="modal-alert" class="modal" onclick="event.stopPropagation()">
-            <div class="modal-header" id="modal-alert-header" style="font-weight: bold; margin-bottom: 10px;">⚠️ Atenção</div>
+            <div style="font-weight: bold; margin-bottom: 10px;">⚠️ Atenção</div>
             <div id="modal-alert-body"></div>
-            <div class="modal-footer"><button class="modal-btn modal-btn-ok" onclick="fecharTodosModais()">OK</button></div>
+            <div class="modal-footer"><button class="modal-btn" style="background: var(--primary); color:white;" onclick="fecharTodosModais()">OK</button></div>
         </div>
 
         <div id="modal-confirm" class="modal" onclick="event.stopPropagation()">
-            <div class="modal-header" style="font-weight: bold; color: var(--delete); margin-bottom: 10px;">⚠️ Confirmação</div>
+            <div style="font-weight: bold; color: var(--delete); margin-bottom: 10px;">⚠️ Confirmação</div>
             <div id="modal-confirm-body"></div>
             <div class="modal-footer">
-                <button class="modal-btn modal-btn-cancel" onclick="fecharTodosModais()">Cancelar</button>
-                <button class="modal-btn modal-btn-danger" onclick="executarAcaoConfirmada()">Sim, Confirmar</button>
+                <button class="modal-btn" style="background:#eee" onclick="fecharTodosModais()">Cancelar</button>
+                <button class="modal-btn" style="background:var(--delete); color:white;" onclick="executarAcaoConfirmada()">Confirmar</button>
             </div>
         </div>
 
         <div id="modal-itens" class="modal" onclick="event.stopPropagation()">
-            <h2 id="modal-titulo-lista" style="color: var(--primary); font-size: 18px; margin: 0; font-weight: 800;"></h2>
-            <p id="modal-data-lista" style="font-size: 12px; color: var(--text-light); margin-bottom: 15px;"></p>
+            <h2 id="modal-titulo-lista" style="color: var(--primary); font-size: 16px; margin: 0; font-weight: 800;"></h2>
+            <p id="modal-data-lista" style="font-size: 11px; color: var(--text-light); margin-bottom: 10px;"></p>
             <ul id="modal-lista-itens" style="list-style: none; text-align: left; padding: 0; margin: 0;"></ul>
-            <button class="modal-btn modal-btn-cancel" style="width: 100%; margin-top: 20px;" onclick="fecharTodosModais()">Fechar</button>
+            <button class="modal-btn" style="width: 100%; margin-top: 20px; background:#eee" onclick="fecharTodosModais()">Fechar</button>
         </div>
     </div>
 
     <script>
+        // CATEGORIAS ATUALIZADAS COM HORTIFRÚTI COMPLETO
+        const CATEGORIAS_MAP = {
+            "BEBIDAS": ["coca", "suco", "cerveja", "agua", "refri", "vinho", "skol", "brahma", "heineken", "lata", "garrafa", "fardo", "gin", "vodka", "tônica", "red bull", "energetico"],
+            "CARNES / PROTEÍNAS": ["carne", "picanha", "frango", "linguica", "maminha", "alcatra", "peixe", "porco", "bacon", "costela", "cupim", "coracao", "sobrecoxa", "linguiça"],
+            "HORTIFRÚTI": ["alface", "tomate", "cebola", "batata", "limao", "fruta", "legume", "pimentao", "cenoura", "alho", "abobora", "cheiro verde", "salsa", "coentro", "rucula", "couve", "brocolis", "mandioca", "milho", "vagem", "abobrinha"],
+            "PROD. LIMPEZA": ["detergente", "sabao", "desinfetante", "agua sanitaria", "limpeza", "esponja", "papel", "pano", "cloro", "alcool", "multiuso", "rodo", "vassoura"],
+            "OUTROS": []
+        };
+
+        function identificarCategoria(nome) {
+            const n = nome.toLowerCase();
+            for (let cat in CATEGORIAS_MAP) {
+                if (CATEGORIAS_MAP[cat].some(palavra => n.includes(palavra))) {
+                    return cat;
+                }
+            }
+            return "OUTROS";
+        }
+
         let historicoEstoque = JSON.parse(localStorage.getItem('historicoEstoquePacheco')) || [];
         let itensPadrao = JSON.parse(localStorage.getItem('itensEstoquePacheco')) || [
-            {nome: 'Carvão (Saco)', limite: 5},
-            {nome: 'Cerveja Lata', limite: 24}
+            {nome: 'Carvão (Saco)', limite: 5, categoria: 'OUTROS'},
+            {nome: 'Picanha (kg)', limite: 10, categoria: 'CARNES / PROTEÍNAS'},
+            {nome: 'Tomate', limite: 5, categoria: 'HORTIFRÚTI'}
         ];
 
-        // LÓGICA DE MODAIS
         let acaoPendente = null;
         function fecharTodosModais(event) {
             if(event && event.target.id !== 'modal-overlay') return;
@@ -175,8 +180,7 @@
             acaoPendente = null;
         }
 
-        function abrirAlerta(msg, titulo = "Aviso") {
-            document.getElementById('modal-alert-header').innerText = titulo;
+        function abrirAlerta(msg) {
             document.getElementById('modal-alert-body').innerText = msg;
             document.getElementById('modal-overlay').classList.add('show');
             document.getElementById('modal-alert').classList.add('show');
@@ -191,62 +195,68 @@
 
         function executarAcaoConfirmada() { if(acaoPendente) acaoPendente(); fecharTodosModais(); }
 
-        // MÁQUINA DE ESTOQUE
-        function verificarLimite(input, limite, index) {
+        function verificarLimite(input, limite, nome) {
             const valor = parseFloat(input.value);
-            // Salva o rascunho enquanto digita
-            localStorage.setItem(`draft-qtd-${index}`, input.value);
-            
-            if (!isNaN(valor) && valor <= limite) {
-                input.classList.add('estoque-baixo');
-            } else {
-                input.classList.remove('estoque-baixo');
-            }
+            localStorage.setItem(`draft-${nome}`, input.value); 
+            if (!isNaN(valor) && valor <= limite) { input.classList.add('estoque-baixo'); } 
+            else { input.classList.remove('estoque-baixo'); }
         }
 
         function renderizarPadroes() {
             const container = document.getElementById('lista-padroes');
             container.innerHTML = '';
             
-            itensPadrao.forEach((item, i) => {
-                const draftValue = localStorage.getItem(`draft-qtd-${i}`) || '';
-                container.innerHTML += `
-                    <div class="item-estoque-row">
-                        <span class="item-estoque-nome">${item.nome} <br><small style="color:#999; font-size:10px">Mínimo: ${item.limite}</small></span>
-                        <div style="display:flex; align-items:center;">
-                            <input type="number" id="qtd-padrao-${i}" 
-                                class="item-estoque-input" 
-                                value="${draftValue}"
-                                oninput="verificarLimite(this, ${item.limite}, ${i})">
-                            <button class="btn-del-padrao" onclick="removerPadrao(${i})"><i class="fas fa-trash"></i></button>
-                        </div>
-                    </div>
-                `;
-                // Aplica a cor vermelha se o rascunho carregado for baixo
-                setTimeout(() => {
-                    const input = document.getElementById(`qtd-padrao-${i}`);
-                    if(input) verificarLimite(input, item.limite, i);
-                }, 10);
+            const agrupados = {};
+            itensPadrao.forEach((item, index) => {
+                if (!agrupados[item.categoria]) agrupados[item.categoria] = [];
+                agrupados[item.categoria].push({ ...item, originalIndex: index });
+            });
+
+            const ordem = ["BEBIDAS", "CARNES / PROTEÍNAS", "HORTIFRÚTI", "PROD. LIMPEZA", "OUTROS"];
+
+            ordem.forEach(cat => {
+                if (agrupados[cat] && agrupados[cat].length > 0) {
+                    container.innerHTML += `<div class="category-header"><i class="fas fa-tag"></i> ${cat}</div>`;
+                    agrupados[cat].forEach(item => {
+                        const draftValue = localStorage.getItem(`draft-${item.nome}`) || '';
+                        container.innerHTML += `
+                            <div class="item-estoque-row">
+                                <span class="item-estoque-nome">${item.nome} <br><small style="color:#999; font-size:9px">Min: ${item.limite}</small></span>
+                                <div style="display:flex; align-items:center;">
+                                    <input type="number" id="input-${item.originalIndex}" 
+                                        class="item-estoque-input" value="${draftValue}"
+                                        oninput="verificarLimite(this, ${item.limite}, '${item.nome}')">
+                                    <button class="btn-del-padrao" onclick="removerPadrao(${item.originalIndex})"><i class="fas fa-trash"></i></button>
+                                </div>
+                            </div>
+                        `;
+                        setTimeout(() => {
+                            const el = document.getElementById(`input-${item.originalIndex}`);
+                            if(el) verificarLimite(el, item.limite, item.nome);
+                        }, 50);
+                    });
+                }
             });
         }
 
         function addNovoPadrao() {
             const inputNome = document.getElementById('novo-item-padrao');
             const inputLimite = document.getElementById('limite-item-padrao');
-            if (inputNome.value.trim()) {
-                itensPadrao.push({ nome: inputNome.value.trim(), limite: parseFloat(inputLimite.value) || 0 });
+            const nome = inputNome.value.trim();
+            if (nome) {
+                const categoria = identificarCategoria(nome);
+                itensPadrao.push({ nome: nome, limite: parseFloat(inputLimite.value) || 0, categoria: categoria });
                 localStorage.setItem('itensEstoquePacheco', JSON.stringify(itensPadrao));
                 inputNome.value = ''; inputLimite.value = '';
                 renderizarPadroes();
             }
         }
 
-        function removerPadrao(i) {
-            abrirConfirmacao("Excluir este produto?", () => {
-                itensPadrao.splice(i, 1);
+        function removerPadrao(index) {
+            abrirConfirmacao("Remover este produto?", () => {
+                localStorage.removeItem(`draft-${itensPadrao[index].nome}`);
+                itensPadrao.splice(index, 1);
                 localStorage.setItem('itensEstoquePacheco', JSON.stringify(itensPadrao));
-                // Limpa o rascunho do item deletado
-                localStorage.removeItem(`draft-qtd-${i}`);
                 renderizarPadroes();
             });
         }
@@ -254,14 +264,13 @@
         function salvarChecagem() {
             let conferidos = [];
             itensPadrao.forEach((item, i) => {
-                let input = document.getElementById(`qtd-padrao-${i}`);
+                let input = document.getElementById(`input-${i}`);
                 conferidos.push({
                     nome: item.nome,
                     qtd: input.value.trim() || "-",
                     corBaixa: input.classList.contains('estoque-baixo')
                 });
-                // Limpa o rascunho após salvar
-                localStorage.removeItem(`draft-qtd-${i}`);
+                localStorage.removeItem(`draft-${item.nome}`);
             });
 
             historicoEstoque.unshift({
@@ -278,14 +287,14 @@
         function renderizarHistorico() {
             const lista = document.getElementById('historico-lista');
             lista.innerHTML = '';
-            historicoEstoque.forEach(reg => {
+            historicoEstoque.slice(0, 5).forEach(reg => {
                 lista.innerHTML += `
                     <div class="card-historico">
-                        <span class="hist-nome-lista">${reg.titulo}</span>
-                        <div style="font-size:11px; color:#999; margin-bottom:10px;">${reg.data}</div>
+                        <span style="font-weight:700; font-size:14px;">${reg.titulo}</span>
+                        <div style="font-size:10px; color:#999;">${reg.data}</div>
                         <div class="hist-acoes">
-                            <button class="btn-hist btn-view" onclick="verDetalhes(${reg.id})">Relatório</button>
-                            <button class="btn-hist btn-del-hist" onclick="excluirHistorico(${reg.id})">Apagar</button>
+                            <button class="btn-hist" style="background:var(--card-bg); border:1px solid var(--border);" onclick="verDetalhes(${reg.id})">Ver Relatório</button>
+                            <button class="btn-hist" style="color:var(--delete); background:none;" onclick="excluirHistorico(${reg.id})">Apagar</button>
                         </div>
                     </div>
                 `;
@@ -301,7 +310,7 @@
             reg.itens.forEach(it => {
                 lista.innerHTML += `
                     <li class="linha-modal">
-                        <span>${it.nome}</span>
+                        <span style="font-size:14px;">${it.nome}</span>
                         <span class="qtd-badge" style="background:${it.corBaixa ? 'var(--delete)' : 'var(--primary)'}">${it.qtd}</span>
                     </li>
                 `;
