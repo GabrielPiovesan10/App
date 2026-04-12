@@ -8,15 +8,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        /* CSS ORIGINAL MANTIDO */
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        html, body { overflow-x: hidden; width: 100%; min-height: 100vh; background-color: var(--bg-color); }
+        html, body { overflow-x: hidden; width: 100%; min-height: 100vh; background-color: var(--bg-color); margin: 0; }
 
         :root {
             --bg-color: #FFFFFF; 
             --card-bg: #F9FAFB; 
             --primary: #2e7d32; 
-            --primary-hover: #1b5e20;
             --text-dark: #1F2937; 
             --text-light: #6B7280; 
             --border: #E5E7EB; 
@@ -48,17 +46,15 @@
         .item-estoque-row { display: flex; justify-content: space-between; align-items: center; background: var(--card-bg); padding: 10px 12px; border-radius: 12px; border: 1px solid var(--border); }
         .item-estoque-nome { font-weight: 600; color: var(--text-dark); flex: 1; font-size: 15px; }
         
-        /* ESTILO DO NÚMERO VERMELHO */
         .item-estoque-input {
             width: 70px; padding: 10px; border: 1px solid var(--border); border-radius: 8px;
             text-align: center; font-size: 15px; outline: none; background: #FFF;
             transition: 0.3s; font-weight: 700;
         }
-        .estoque-baixo { color: var(--delete) !important; }
+        .estoque-baixo { color: var(--delete) !important; border-color: var(--delete) !important; }
 
         .btn-del-padrao { background: none; border: none; color: #CCC; padding: 8px; cursor: pointer; margin-left: 5px; font-size: 16px;}
         
-        /* AJUSTE NA LINHA DE ADICIONAR */
         .add-padrao-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border);}
         .add-padrao-row input#novo-item-padrao { flex: 2; min-width: 150px; padding: 14px; border: 1px solid var(--border); border-radius: 12px; font-size: 15px; background: var(--card-bg); }
         .add-padrao-row input#limite-item-padrao { width: 80px; padding: 14px; border: 1px solid var(--border); border-radius: 12px; font-size: 15px; text-align: center; background: var(--card-bg); }
@@ -68,21 +64,34 @@
 
         .btn-salvar { background: var(--success); color: #FFFFFF; border: none; padding: 16px; border-radius: 12px; font-weight: 800; font-size: 15px; cursor: pointer; text-transform: uppercase; display: flex; justify-content: center; align-items: center; gap: 10px; }
 
-        /* HISTÓRICO E MODAIS MANTIDOS */
         .historico-section { padding: 20px; background: var(--card-bg); border-top: 4px solid var(--primary); border-radius: 0 0 24px 24px; }
         .historico-titulo { font-size: 14px; font-weight: 800; color: var(--primary); text-transform: uppercase; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
         .card-historico { background: #FFFFFF; border: 1px solid var(--border); border-radius: 15px; padding: 15px; margin-bottom: 15px; }
         .hist-nome-lista { color: var(--text-dark); font-size: 15px; font-weight: 700; display: block; margin-bottom: 5px; }
-        .hist-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
         .hist-acoes { display: flex; gap: 10px; border-top: 1px solid var(--border); padding-top: 10px; }
         .btn-hist { flex: 1; padding: 10px; border-radius: 8px; border: none; font-size: 13px; font-weight: 700; cursor: pointer; }
         .btn-view { background: var(--card-bg); color: var(--text-dark); border: 1px solid var(--border); }
         .btn-del-hist { background: rgba(239, 68, 68, 0.05); color: var(--delete); border: 1px solid rgba(239, 68, 68, 0.1); }
 
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.6); z-index: 1000; opacity: 0; visibility: hidden; transition: 0.3s; display: flex; justify-content: center; align-items: center; backdrop-filter: blur(3px); }
-        .modal-overlay.show { opacity: 1; visibility: visible; }
-        .modal { background-color: white; border-radius: 16px; padding: 25px; width: 85%; max-width: 400px; text-align: center; transform: scale(0.8); transition: 0.3s; }
-        .modal.show { transform: scale(1); opacity: 1; visibility: visible; }
+        /* MODAIS CORRIGIDOS - SEM CAIXINHAS LATERAIS */
+        .modal-overlay { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background-color: rgba(0, 0, 0, 0.6); z-index: 1000; 
+            display: none; justify-content: center; align-items: center; 
+            backdrop-filter: blur(3px); 
+        }
+        .modal-overlay.show { display: flex; }
+        
+        .modal { 
+            background-color: white; border-radius: 16px; padding: 25px; 
+            width: 85%; max-width: 400px; text-align: center; 
+            display: none; flex-direction: column;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        .modal.show { display: flex; animation: surge 0.2s ease-out; }
+
+        @keyframes surge { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
         .modal-footer { display: flex; justify-content: space-around; gap: 10px; margin-top: 20px; }
         .modal-btn { padding: 12px 20px; border: none; border-radius: 10px; font-size: 14px; font-weight: bold; cursor: pointer; flex-grow: 1; }
         .modal-btn-ok { background-color: var(--primary); color: white; }
@@ -101,11 +110,9 @@
         
         <input type="text" id="nome-lista-atual" placeholder="Título (Ex: Conferência Matinal)">
 
-        <div class="section-title">Lista Fixa de Produtos</div>
+        <div class="section-title">Lista de Produtos</div>
         <div class="planning-box">
-            
             <div class="estoque-lista-container" id="lista-padroes"></div>
-
             <div class="add-padrao-row">
                 <input type="text" id="novo-item-padrao" placeholder="Nome do produto...">
                 <input type="number" id="limite-item-padrao" placeholder="Limite">
@@ -122,21 +129,22 @@
         </div>
 
         <div class="historico-section">
-            <div class="historico-titulo"><i class="fas fa-history"></i> Histórico de Checagens</div>
+            <div class="historico-titulo"><i class="fas fa-history"></i> Histórico</div>
             <div id="historico-lista"></div>
         </div>
     </div>
 
     <div id="modal-overlay" class="modal-overlay" onclick="fecharTodosModais(event)">
+        
         <div id="modal-alert" class="modal" onclick="event.stopPropagation()">
             <div class="modal-header" id="modal-alert-header" style="font-weight: bold; margin-bottom: 10px;">⚠️ Atenção</div>
-            <div class="modal-body" id="modal-alert-body"></div>
+            <div id="modal-alert-body"></div>
             <div class="modal-footer"><button class="modal-btn modal-btn-ok" onclick="fecharTodosModais()">OK</button></div>
         </div>
 
         <div id="modal-confirm" class="modal" onclick="event.stopPropagation()">
             <div class="modal-header" style="font-weight: bold; color: var(--delete); margin-bottom: 10px;">⚠️ Confirmação</div>
-            <div class="modal-body" id="modal-confirm-body"></div>
+            <div id="modal-confirm-body"></div>
             <div class="modal-footer">
                 <button class="modal-btn modal-btn-cancel" onclick="fecharTodosModais()">Cancelar</button>
                 <button class="modal-btn modal-btn-danger" onclick="executarAcaoConfirmada()">Sim, Confirmar</button>
@@ -144,24 +152,21 @@
         </div>
 
         <div id="modal-itens" class="modal" onclick="event.stopPropagation()">
-            <h2 id="modal-titulo-lista" style="color: var(--primary); font-size: 18px; margin-bottom: 5px; font-weight: 800;"></h2>
-            <p id="modal-data-lista" style="font-size: 12px; color: var(--text-light); margin-bottom: 20px;"></p>
-            <ul id="modal-lista-itens" style="list-style: none; text-align: left; padding: 0;"></ul>
-            <button class="modal-btn modal-btn-cancel" style="width: 100%; margin-top: 25px;" onclick="fecharTodosModais()">Fechar</button>
+            <h2 id="modal-titulo-lista" style="color: var(--primary); font-size: 18px; margin: 0; font-weight: 800;"></h2>
+            <p id="modal-data-lista" style="font-size: 12px; color: var(--text-light); margin-bottom: 15px;"></p>
+            <ul id="modal-lista-itens" style="list-style: none; text-align: left; padding: 0; margin: 0;"></ul>
+            <button class="modal-btn modal-btn-cancel" style="width: 100%; margin-top: 20px;" onclick="fecharTodosModais()">Fechar</button>
         </div>
     </div>
 
     <script>
         let historicoEstoque = JSON.parse(localStorage.getItem('historicoEstoquePacheco')) || [];
-        
-        // Estrutura atualizada para suportar limites
         let itensPadrao = JSON.parse(localStorage.getItem('itensEstoquePacheco')) || [
-            {nome: 'Arroz (5kg)', limite: 2}, 
             {nome: 'Carvão (Saco)', limite: 5},
-            {nome: 'Detergente', limite: 3}
+            {nome: 'Cerveja Lata', limite: 24}
         ];
 
-        // --- SISTEMA DE MODAIS ---
+        // LÓGICA DE MODAIS
         let acaoPendente = null;
         function fecharTodosModais(event) {
             if(event && event.target.id !== 'modal-overlay') return;
@@ -169,25 +174,29 @@
             document.querySelectorAll('.modal').forEach(m => m.classList.remove('show'));
             acaoPendente = null;
         }
-        function abrirAlerta(mensagem, titulo = "Aviso") {
+
+        function abrirAlerta(msg, titulo = "Aviso") {
             document.getElementById('modal-alert-header').innerText = titulo;
-            document.getElementById('modal-alert-body').innerText = mensagem;
+            document.getElementById('modal-alert-body').innerText = msg;
             document.getElementById('modal-overlay').classList.add('show');
             document.getElementById('modal-alert').classList.add('show');
         }
-        function abrirConfirmacao(mensagem, acao) {
-            document.getElementById('modal-confirm-body').innerText = mensagem;
+
+        function abrirConfirmacao(msg, acao) {
+            document.getElementById('modal-confirm-body').innerText = msg;
             acaoPendente = acao;
             document.getElementById('modal-overlay').classList.add('show');
             document.getElementById('modal-confirm').classList.add('show');
         }
+
         function executarAcaoConfirmada() { if(acaoPendente) acaoPendente(); fecharTodosModais(); }
 
-        // --- LÓGICA DE ESTOQUE ---
-
-        // Função que muda a cor do número para VERMELHO
-        function verificarLimite(input, limite) {
+        // MÁQUINA DE ESTOQUE
+        function verificarLimite(input, limite, index) {
             const valor = parseFloat(input.value);
+            // Salva o rascunho enquanto digita
+            localStorage.setItem(`draft-qtd-${index}`, input.value);
+            
             if (!isNaN(valor) && valor <= limite) {
                 input.classList.add('estoque-baixo');
             } else {
@@ -199,90 +208,83 @@
             const container = document.getElementById('lista-padroes');
             container.innerHTML = '';
             
-            if(itensPadrao.length === 0) {
-                container.innerHTML = `<p style="text-align:center; color:#999; font-size: 14px; padding: 20px;">Nenhum item cadastrado.</p>`;
-                return;
-            }
-
             itensPadrao.forEach((item, i) => {
-                // Suporte para itens antigos que eram apenas string
-                const nome = typeof item === 'string' ? item : item.nome;
-                const limite = typeof item === 'object' ? item.limite : 0;
-
+                const draftValue = localStorage.getItem(`draft-qtd-${i}`) || '';
                 container.innerHTML += `
                     <div class="item-estoque-row">
-                        <span class="item-estoque-nome">${nome} <br><small style="color:#999; font-size:10px">Mínimo: ${limite}</small></span>
+                        <span class="item-estoque-nome">${item.nome} <br><small style="color:#999; font-size:10px">Mínimo: ${item.limite}</small></span>
                         <div style="display:flex; align-items:center;">
                             <input type="number" id="qtd-padrao-${i}" 
                                 class="item-estoque-input" 
-                                placeholder="Qtd"
-                                oninput="verificarLimite(this, ${limite})">
+                                value="${draftValue}"
+                                oninput="verificarLimite(this, ${item.limite}, ${i})">
                             <button class="btn-del-padrao" onclick="removerPadrao(${i})"><i class="fas fa-trash"></i></button>
                         </div>
                     </div>
                 `;
+                // Aplica a cor vermelha se o rascunho carregado for baixo
+                setTimeout(() => {
+                    const input = document.getElementById(`qtd-padrao-${i}`);
+                    if(input) verificarLimite(input, item.limite, i);
+                }, 10);
             });
         }
 
         function addNovoPadrao() {
             const inputNome = document.getElementById('novo-item-padrao');
             const inputLimite = document.getElementById('limite-item-padrao');
-            const nome = inputNome.value.trim();
-            const limite = parseFloat(inputLimite.value) || 0;
-
-            if (nome) {
-                itensPadrao.push({ nome: nome, limite: limite });
+            if (inputNome.value.trim()) {
+                itensPadrao.push({ nome: inputNome.value.trim(), limite: parseFloat(inputLimite.value) || 0 });
                 localStorage.setItem('itensEstoquePacheco', JSON.stringify(itensPadrao));
-                inputNome.value = '';
-                inputLimite.value = '';
+                inputNome.value = ''; inputLimite.value = '';
                 renderizarPadroes();
             }
         }
 
         function removerPadrao(i) {
-            abrirConfirmacao("Excluir este produto do sistema?", () => {
+            abrirConfirmacao("Excluir este produto?", () => {
                 itensPadrao.splice(i, 1);
                 localStorage.setItem('itensEstoquePacheco', JSON.stringify(itensPadrao));
+                // Limpa o rascunho do item deletado
+                localStorage.removeItem(`draft-qtd-${i}`);
                 renderizarPadroes();
             });
         }
 
         function salvarChecagem() {
-            if(itensPadrao.length === 0) return;
-            let itensConferidos = [];
-            let titulo = document.getElementById('nome-lista-atual').value.trim();
-            
+            let conferidos = [];
             itensPadrao.forEach((item, i) => {
                 let input = document.getElementById(`qtd-padrao-${i}`);
-                itensConferidos.push({
-                    nome: typeof item === 'string' ? item : item.nome,
-                    qtd: input.value.trim() === "" ? "-" : input.value.trim(),
-                    corBaixa: input.classList.contains('estoque-baixo') // Salva se estava vermelho
+                conferidos.push({
+                    nome: item.nome,
+                    qtd: input.value.trim() || "-",
+                    corBaixa: input.classList.contains('estoque-baixo')
                 });
+                // Limpa o rascunho após salvar
+                localStorage.removeItem(`draft-qtd-${i}`);
             });
 
-            let novoRegistro = {
+            historicoEstoque.unshift({
                 id: Date.now(),
-                titulo: titulo || "Checagem de Rotina",
+                titulo: document.getElementById('nome-lista-atual').value || "Conferência",
                 data: new Date().toLocaleString('pt-BR'),
-                itens: itensConferidos
-            };
+                itens: conferidos
+            });
 
-            historicoEstoque.unshift(novoRegistro);
             localStorage.setItem('historicoEstoquePacheco', JSON.stringify(historicoEstoque));
             location.reload(); 
         }
 
         function renderizarHistorico() {
-            const container = document.getElementById('historico-lista');
-            container.innerHTML = '';
+            const lista = document.getElementById('historico-lista');
+            lista.innerHTML = '';
             historicoEstoque.forEach(reg => {
-                container.innerHTML += `
+                lista.innerHTML += `
                     <div class="card-historico">
                         <span class="hist-nome-lista">${reg.titulo}</span>
-                        <div class="hist-header"><span style="font-size:12px; color: var(--text-light);">${reg.data}</span></div>
+                        <div style="font-size:11px; color:#999; margin-bottom:10px;">${reg.data}</div>
                         <div class="hist-acoes">
-                            <button class="btn-hist btn-view" onclick="verDetalhes(${reg.id})">Ver Relatório</button>
+                            <button class="btn-hist btn-view" onclick="verDetalhes(${reg.id})">Relatório</button>
                             <button class="btn-hist btn-del-hist" onclick="excluirHistorico(${reg.id})">Apagar</button>
                         </div>
                     </div>
@@ -297,23 +299,22 @@
             const lista = document.getElementById('modal-lista-itens');
             lista.innerHTML = '';
             reg.itens.forEach(it => {
-                let cor = it.corBaixa ? "var(--delete)" : "var(--primary)";
                 lista.innerHTML += `
                     <li class="linha-modal">
                         <span>${it.nome}</span>
-                        <span class="qtd-badge" style="background: ${cor}">${it.qtd}</span>
+                        <span class="qtd-badge" style="background:${it.corBaixa ? 'var(--delete)' : 'var(--primary)'}">${it.qtd}</span>
                     </li>
                 `;
             });
             document.getElementById('modal-overlay').classList.add('show');
             document.getElementById('modal-itens').classList.add('show');
         }
-        
+
         function excluirHistorico(id) { 
-            abrirConfirmacao("Apagar este relatório?", () => {
-                historicoEstoque = historicoEstoque.filter(h => h.id !== id); 
-                localStorage.setItem('historicoEstoquePacheco', JSON.stringify(historicoEstoque)); 
-                renderizarHistorico(); 
+            abrirConfirmacao("Apagar do histórico?", () => {
+                historicoEstoque = historicoEstoque.filter(h => h.id !== id);
+                localStorage.setItem('historicoEstoquePacheco', JSON.stringify(historicoEstoque));
+                renderizarHistorico();
             });
         }
 
